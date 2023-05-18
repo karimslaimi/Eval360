@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eval360", "Eval360\Eval360.csproj", "{23769C27-2DCE-497E-9C9E-F77ED69B9172}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23769C27-2DCE-497E-9C9E-F77ED69B9172}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23769C27-2DCE-497E-9C9E-F77ED69B9172}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23769C27-2DCE-497E-9C9E-F77ED69B9172}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23769C27-2DCE-497E-9C9E-F77ED69B9172}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F902D808-F3FA-425F-9DC2-3A34FCCEBF69}
+	EndGlobalSection
+EndGlobal
