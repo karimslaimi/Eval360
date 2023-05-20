@@ -11,6 +11,8 @@ namespace Eval360.Models
         public UserType UserType { get; set; }
         public DateTime dateEmbauche { get; set; }
 
+        public int? idPoste { get; set; }
+        public Poste Poste { get; set; }
 
         //todo add direction, poste, and superior
 

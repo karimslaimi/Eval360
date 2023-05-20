@@ -1,13 +1,17 @@
-﻿@{ ViewBag.Title = "Directions"; Layout = "~/Views/Shared/_Layout.cshtml"; } 
-@using System.Globalization; @{ CultureInfo french = new CultureInfo("fr-FR"); }
-@model IEnumerable<Direction>;
+﻿@{
+    ViewBag.Title = "Postes"; Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using System.Globalization; @{
+    CultureInfo french = new CultureInfo("fr-FR");
+}
+@model IEnumerable<Poste>;
 
 <div class="pagetitle">
     <h1>Dashboard</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="">Accueil</a></li>
-            <li class="breadcrumb-item active">Directions</li>
+            <li class="breadcrumb-item active">Postes</li>
         </ol>
     </nav>
 </div>
@@ -18,7 +22,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Liste des Direction</h5>
+                    <h5 class="card-title">Liste des Postes</h5>
 
                     <!-- Table with stripped rows -->
                     <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
@@ -36,7 +40,7 @@
                                 </label>
                             </div>
                             <div class="datatable-search">
-                                <a class="btn btn-outline-primary" href="@Url.Action("create", "Direction")">Ajouter</a>
+                                <a class="btn btn-outline-primary" href="@Url.Action("create", "Poste")">Ajouter</a>
                             </div>
                         </div>
                         <div class="datatable-container">
@@ -49,32 +53,48 @@
                                         <th data-sortable="true" style="width: 28.22368421052632%;">
                                             <a href="#" class="datatable-sorter">Nom</a>
                                         </th>
+                                        <th data-sortable="true" style="width: 28.22368421052632%;">
+                                            <a href="#" class="datatable-sorter">Niveau</a>
+                                        </th>
+                                        <th data-sortable="true" style="width: 28.22368421052632%;">
+                                            <a href="#" class="datatable-sorter">Direction</a>
+                                        </th>
+                                        <th data-sortable="true" style="width: 28.22368421052632%;">
+                                            <a href="#" class="datatable-sorter">Employéé</a>
+                                        </th>
                                         <th style="width: 37.17105263157895%;">
                                             <a>Action</a>
                                         </th>
-                                       </tr>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     @{
                                         int i = 0;
                                     }
-                                    @foreach (var direction in Model)
+                                    @foreach (var poste in Model)
                                     {
                                         <tr data-index="@i">
-                                            <td>@direction.id</td>
-                                            <td>@direction.name</td>
+                                            <td>@poste.Id</td>
+                                            <td>@poste.libelle</td>
+                                            <td>@poste.niveau</td>
                                             <td>
-                                                <a class="btn btn-outline-success" href="@Url.Action("edit","Direction",new { id =direction.id})">Modifier</a> |
-                                                <a class="btn btn-outline-danger" href="@Url.Action("delete","Direction",new { id =direction.id})">supprimer</a>
+                                                @(poste.Direction != null? Html.Raw($"<a>{poste.Direction.name}</a>"): Html.Raw("N/A"))
+                                            </td>   
+                                            <td>
+                                                @(poste.users != null ? poste.users.Count() : 0)
                                             </td>
-                                        </tr> 
-                                       
-                                            i++;
-                                        
+                                            <td>
+                                                <a class="btn btn-outline-success" href="@Url.Action("edit","Poste",new { id =poste.Id})">Modifier</a> |
+                                                <a class="btn btn-outline-danger" href="@Url.Action("delete","Poste",new { id =poste.Id})">supprimer</a>
+                                            </td>
+                                        </tr>
+
+                                        i++;
+
 
                                     }
 
-                  
+
                                 </tbody>
                             </table>
                         </div>

@@ -7,6 +7,6 @@ namespace Eval360.Models
         [Key]
         public int id { get; set; }
         public string name { get; set; }
-        public ICollection<Poste> postes { get; set; }
+        public ICollection<Poste>? postes { get; set; }
     }
 }

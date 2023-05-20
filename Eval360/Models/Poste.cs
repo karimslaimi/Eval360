@@ -13,8 +13,10 @@ namespace Eval360.Models
         public int niveau { get; set; }
 
         [ForeignKey("Direction")]
-        public int IdDirection { get; set; }
+        public int? IdDirection { get; set; }
 
-        public Direction Direction { get; set; }
+        public Direction? Direction { get; set; }
+
+        public ICollection<User>? users { get; set; }
     }
 }

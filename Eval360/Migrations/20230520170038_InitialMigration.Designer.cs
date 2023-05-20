@@ -4,20 +4,22 @@ using Eval360.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Eval360.Data.Migrations
+namespace Eval360.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230520170038_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.7")
+                .HasAnnotation("ProductVersion", "6.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -36,7 +38,7 @@ namespace Eval360.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Direction");
+                    b.ToTable("Directions");
                 });
 
             modelBuilder.Entity("Eval360.Models.Poste", b =>
@@ -47,7 +49,7 @@ namespace Eval360.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("IdDirection")
+                    b.Property<int?>("IdDirection")
                         .HasColumnType("int");
 
                     b.Property<string>("libelle")
@@ -110,6 +112,9 @@ namespace Eval360.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int>("PosteId")
+                        .HasColumnType("int");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -130,6 +135,9 @@ namespace Eval360.Data.Migrations
                     b.Property<DateTime>("dateEmbauche")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("idPoste")
+                        .HasColumnType("int");
+
                     b.Property<string>("preNom")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -147,6 +155,8 @@ namespace Eval360.Data.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("PosteId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -293,10 +303,20 @@ namespace Eval360.Data.Migrations
                     b.HasOne("Eval360.Models.Direction", "Direction")
                         .WithMany("postes")
                         .HasForeignKey("IdDirection")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Direction");
+                });
+
+            modelBuilder.Entity("Eval360.Models.User", b =>
+                {
+                    b.HasOne("Eval360.Models.Poste", "Poste")
+                        .WithMany("users")
+                        .HasForeignKey("PosteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Direction");
+                    b.Navigation("Poste");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -353,6 +373,11 @@ namespace Eval360.Data.Migrations
             modelBuilder.Entity("Eval360.Models.Direction", b =>
                 {
                     b.Navigation("postes");
+                });
+
+            modelBuilder.Entity("Eval360.Models.Poste", b =>
+                {
+                    b.Navigation("users");
                 });
 #pragma warning restore 612, 618
         }

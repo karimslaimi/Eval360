@@ -7,6 +7,7 @@ namespace Eval360.Data
     public class ApplicationDbContext : IdentityDbContext<User>
     {
         public DbSet<Direction> Directions { get; set; }
+        public DbSet<Poste> Poste { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

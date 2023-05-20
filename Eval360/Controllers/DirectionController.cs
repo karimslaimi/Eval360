@@ -28,7 +28,7 @@ namespace Eval360.Controllers
 
         }
         [HttpPost]
-        public IActionResult Create([FromBody] Direction direction)
+        public IActionResult Create(Direction direction)
         {
             if (ModelState.IsValid)
             {
