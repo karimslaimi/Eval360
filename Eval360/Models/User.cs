@@ -12,9 +12,10 @@ namespace Eval360.Models
         public DateTime dateEmbauche { get; set; }
 
         public int? idPoste { get; set; }
-        public Poste Poste { get; set; }
+        public Poste? Poste { get; set; }
 
-        //todo add direction, poste, and superior
+        public int? idSuperior { get; set; }
+        public User? superior { get; set; }
 
 
       public User() { }

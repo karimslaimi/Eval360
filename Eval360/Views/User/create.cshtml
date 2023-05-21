@@ -1,0 +1,70 @@
+﻿@model User
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+<div class="container">
+    <h1>Ajouter un utilisateur</h1>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-theme-6" })
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                @Html.LabelFor(m => m.Nom, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.Nom, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Nom, "", new { @class = "text-danger" })
+            </div>
+            <div class="mb-3 col-md-6">
+                @Html.LabelFor(m => m.preNom, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.preNom, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.preNom, "", new { @class = "text-danger" })
+            </div>
+            <div class="mb-3 col-md-6">
+                @Html.LabelFor(m => m.dateEmbauche, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.dateEmbauche, new {@type="date", @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.dateEmbauche, "", new { @class = "text-danger" })
+            </div>
+            <div class="mb-3 col-md-6">
+                @Html.LabelFor(m => m.sexe, new { @class = "form-label" })
+                @Html.DropDownList("sexe", new SelectList(new[]
+            {
+            new SelectListItem { Value = "Male", Text = "Male" },
+            new SelectListItem { Value = "Female", Text = "Female" }
+            }, "Value", "Text"), "Select a gender", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.sexe, "", new { @class = "text-danger" })
+            </div>
+            <div class="mb-3 col-md-6">
+                @Html.LabelFor(m => m.superior, new { @class = "form-label" })
+                @Html.DropDownListFor(m => m.idSuperior,(SelectList) ViewBag.userList, "Selectionner un supérieur", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.idSuperior, "", new { @class = "text-danger" })
+            </div>
+            <div class="mb-3 col-md-6">
+                @Html.LabelFor(m => m.idPoste, new { @class = "form-label" })
+                @Html.DropDownListFor(m => m.idPoste,(SelectList) ViewBag.PostesList, "Selectionner un poste", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.idPoste, "", new { @class = "text-danger" })
+            </div>
+            <div class="mb-3 col-md-6">
+                @Html.LabelFor(m => m.UserName, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+            </div>          
+            <div class="mb-3 col-md-6">
+                @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+            </div>         
+            <div class="mb-3 col-md-6">
+                @Html.LabelFor(m => m.PasswordHash, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.PasswordHash, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.PasswordHash, "", new { @class = "text-danger" })
+            </div>
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+    }
+</div>

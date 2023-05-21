@@ -8,6 +8,7 @@ namespace Eval360.Data
     {
         public DbSet<Direction> Directions { get; set; }
         public DbSet<Poste> Poste { get; set; }
+        public DbSet<User> User { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
