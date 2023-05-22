@@ -8,30 +8,37 @@
 
 
 <div class="container">
-    <h1>Ajouter un poste</h1>
+    <div class="card">
+        <div class="card-body">
+            <div class="card-title">
+                <h1>Ajouter un poste</h1>
+            </div>
 
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true, "", new { @class = "text-theme-6" })
-        <div class="row">
-        <div class="mb-3 col-md-6">
-            @Html.LabelFor(m => m.libelle, new { @class = "form-label" })
-            @Html.TextBoxFor(m => m.libelle, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.libelle, "", new { @class = "text-danger" })
-        </div> 
-        <div class="mb-3 col-md-6">
-            @Html.LabelFor(m => m.niveau, new { @class = "form-label" })
-            @Html.TextBoxFor(m => m.niveau, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.niveau, "", new { @class = "text-danger" })
-        </div>        
-        <div class="mb-3 col-md-6">
-            @Html.LabelFor(m => m.IdDirection, new { @class = "form-label" })
-            @Html.DropDownListFor(m => m.IdDirection,(SelectList) ViewBag.DirectionsList, "Selectionner une Direction", new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.IdDirection, "", new { @class = "text-danger" })
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-theme-6" })
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        @Html.LabelFor(m => m.libelle, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.libelle, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.libelle, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        @Html.LabelFor(m => m.niveau, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.niveau, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.niveau, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        @Html.LabelFor(m => m.IdDirection, new { @class = "form-label" })
+                        @Html.DropDownListFor(m => m.IdDirection,(SelectList) ViewBag.DirectionsList, "Selectionner une Direction", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.IdDirection, "", new { @class = "text-danger" })
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            }
         </div>
-
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
     </div>
-    }
 </div>

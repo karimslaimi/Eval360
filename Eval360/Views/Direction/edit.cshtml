@@ -8,18 +8,24 @@
 
 
 <div class="container">
-    <h1>Modifier direction</h1>
+    <div class="card">
+        <div class="card-body">
+            <div class="card-tile">
+                <h1>Modifier direction</h1>
+            </div>
 
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true, "", new { @class = "text-theme-6" })
-        <div class="mb-3 col-md-6">
-            @Html.LabelFor(m => m.name, new { @class = "form-label" })
-            @Html.TextBoxFor(m => m.name, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.name, "", new { @class = "text-danger" })
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-theme-6" })
+                <div class="mb-3 col-md-6">
+                    @Html.LabelFor(m => m.name, new { @class = "form-label" })
+                    @Html.TextBoxFor(m => m.name, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.name, "", new { @class = "text-danger" })
+                </div>
+
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+            }
         </div>
-
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-    }
+    </div>
 </div>

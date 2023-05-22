@@ -4,12 +4,12 @@ namespace Eval360.Models
 {
     public class User : IdentityUser
     {
-        public string cin { get;set; }
-        public string Nom { get; set; }
-        public string preNom { get; set; }
-        public string sexe { get; set; }
+        public string? cin { get;set; }
+        public string? Nom { get; set; }
+        public string? preNom { get; set; }
+        public string? sexe { get; set; }
         public UserType UserType { get; set; }
-        public DateTime dateEmbauche { get; set; }
+        public DateTime? dateEmbauche { get; set; }
 
         public int? idPoste { get; set; }
         public Poste? Poste { get; set; }

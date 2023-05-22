@@ -50,8 +50,8 @@
                         </div>
                         <div class="mb-3 col-md-6">
                             @Html.LabelFor(m=>m.superior, "Supérieur" , new { @class = "form-label"})
-                            @Html.DropDownListFor(m => m.superior,(SelectList) ViewBag.userList, "Selectionner un supérieur", new { @class = "form-control" })
-                            @Html.ValidationMessageFor(m => m.superior, "", new { @class = "text-danger" })
+                            @Html.DropDownListFor(m => m.idSuperior,(SelectList) ViewBag.userList, "Selectionner un supérieur", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.idSuperior, "", new { @class = "text-danger" })
                         </div>
                         <div class="mb-3 col-md-6">
                             @Html.LabelFor(m => m.Poste, new { @class = "form-label" })
@@ -78,12 +78,6 @@
                             @Html.TextBoxFor(m => m.cin, new { @class = "form-control" })
                             @Html.ValidationMessageFor(m => m.cin, "", new { @class = "text-danger" })
                         </div>
-                        <div class="mb-3 col-md-6">
-                            @Html.LabelFor(m => m.UserType, "Type d'utilisateur", new { @class = "form-label" })
-                            @Html.DropDownList("StudentGender", Html.GetEnumSelectList<UserType>(), "Selectionner Role",new { @class = "form-control" })    
-                            @Html.ValidationMessageFor(m => m.UserType, "", new { @class = "text-danger" })
-                        </div>
-
                         <button type="submit" class="btn btn-primary">Enregistrer</button>
                     </div>
                 }

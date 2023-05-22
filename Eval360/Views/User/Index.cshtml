@@ -76,7 +76,9 @@
                                             <td>@user.cin</td>
                                             <td>@user.preNom @user.Nom</td>
                                             <td>@user.Email</td>
-                                            <td>@user.dateEmbauche.ToString("dd/MM/yyyy")</td>
+                                            <td>@(user.dateEmbauche.HasValue? user.dateEmbauche.Value.ToString("dd/MM/yyyy") : "")</td>
+                                            <td>@user.sexe</td>
+                                            <td>@user.UserName</td>
                                             <td>
                                                 <a class="btn btn-outline-success" href="@Url.Action("edit","User",new { id =user.Id})">Modifier</a> |
                                                 <a class="btn btn-outline-danger" href="@Url.Action("delete","User",new { id =user.Id})">Désactiver</a>
