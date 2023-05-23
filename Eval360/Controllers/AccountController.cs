@@ -61,7 +61,7 @@ namespace Eval360.Controllers
             await this._httpContextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             // Redirect to a specific page after logout
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("login");
         }
 
 

@@ -64,6 +64,7 @@
                                     @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-horizontal" }))
                                     {
                                         @Html.AntiForgeryToken()
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                                         <div class="col-12 mb-3">
                                             @Html.LabelFor(x=>x.userName, "UserName", new {@class = "form-label"})
@@ -92,7 +93,7 @@
 
                                 </div>
                             </div>
-                             
+
 
                         </div>
                     </div>

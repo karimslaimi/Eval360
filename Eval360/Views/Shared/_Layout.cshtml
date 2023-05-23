@@ -90,7 +90,7 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                            <a class="dropdown-item d-flex align-items-center" href="@Url.Action("profile", "user", new {username = User.Identity.Name})">
                                 <i class="bi bi-person"></i>
                                 <span>Profil</span>
                             </a>
@@ -103,7 +103,7 @@
 
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="#">
+                            <a class="dropdown-item d-flex align-items-center" href="@Url.Action("logout","account")">
                                 <i class="bi bi-box-arrow-right"></i>
                                 <span>Déconnexion</span>
                             </a>

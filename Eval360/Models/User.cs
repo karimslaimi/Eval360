@@ -14,7 +14,7 @@ namespace Eval360.Models
         public int? idPoste { get; set; }
         public Poste? Poste { get; set; }
 
-        public int? idSuperior { get; set; }
+        public string? idSuperior { get; set; }
         public User? superior { get; set; }
 
 

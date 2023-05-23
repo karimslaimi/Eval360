@@ -1,7 +1,8 @@
 ﻿@{ ViewBag.Title = "Utilisateurs"; Layout = "~/Views/Shared/_Layout.cshtml"; } 
 @using System.Globalization; @{ CultureInfo french = new CultureInfo("fr-FR"); }
 @model IEnumerable<User>;
-
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> UserManager
 <div class="pagetitle">
     <h1>Dashboard</h1>
     <nav>
@@ -81,7 +82,8 @@
                                             <td>@user.UserName</td>
                                             <td>
                                                 <a class="btn btn-outline-success" href="@Url.Action("edit","User",new { id =user.Id})">Modifier</a> |
-                                                <a class="btn btn-outline-danger" href="@Url.Action("delete","User",new { id =user.Id})">Désactiver</a>
+                                                <a class="btn btn-outline-danger" href="@Url.Action("disable","User",new { id =user.Id})">
+                                                    @(await UserManager.IsLockedOutAsync(user)?"Activer":"Désactiver")</a>
                                             </td>
                                         </tr> 
                                        

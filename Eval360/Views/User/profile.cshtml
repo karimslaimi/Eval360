@@ -1,7 +1,25 @@
 ﻿@model User
 
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    var currentUser = User.Identity.Name;
+    var role = "";
+    if (User.IsInRole("Admin"))
+    {
+        role = "Admin";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else if (User.IsInRole("Gestionnaire"))
+    {
+        role = "Gestionnaire";
+        Layout = "~/Views/Shared/_LayoutGestionnaire.cshtml";
+    }
+    else if (User.IsInRole("Employee"))
+    {
+        role = "Employée";
+        Layout = "~/Views/Shared/_LayoutEmployee.cshtml";
+    }
+
+
 }
 
 
@@ -35,8 +53,13 @@
                             @Html.ValidationMessageFor(m => m.preNom, "", new { @class = "text-danger" })
                         </div>
                         <div class="mb-3 col-md-6">
-                            @Html.LabelFor(m => m.dateEmbauche, new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.dateEmbauche,"{0:yyyy-MM-dd}" , new {@type="date", @class = "form-control" })
+                            @Html.LabelFor(m => m.PasswordHash, "Mot de passe" , new { @class = "form-label" })
+                            @Html.PasswordFor(m => m.PasswordHash, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.PasswordHash, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            @Html.LabelFor(m => m.dateEmbauche, new {  @class = "form-label" })
+                            @Html.TextBoxFor(m => m.dateEmbauche,  "{0:yyyy-MM-dd}" ,new {@type="date",@readonly="readonly", @disabled="disabled", @class = "form-control" })
                             @Html.ValidationMessageFor(m => m.dateEmbauche, "", new { @class = "text-danger" })
                         </div>
                         <div class="mb-3 col-md-6">
@@ -45,37 +68,33 @@
                         {
                         new SelectListItem { Value = "Male", Text = "Male" },
                         new SelectListItem { Value = "Female", Text = "Female" }
-                        }, "Value", "Text"), "Selectionner le sexe", new { @class = "form-control" })
+                        }, "Value", "Text"), "Selectionner le sexe", new {@readonly="readonly",@disabled="disabled",  @class = "form-control" })
                             @Html.ValidationMessageFor(m => m.sexe, "", new { @class = "text-danger" })
                         </div>
                         <div class="mb-3 col-md-6">
-                            @Html.LabelFor(m=>m.idSuperior, "Supérieur" , new { @class = "form-label"})
-                            @Html.DropDownListFor(m => m.idSuperior,(SelectList) ViewBag.userList, "Selectionner un supérieur", new { @class = "form-control" })
+                            @Html.LabelFor(m=>m.superior, "Supérieur" , new { @class = "form-label"})
+                            @Html.DropDownListFor(m => m.idSuperior,(SelectList) ViewBag.userList, "Selectionner un supérieur", new {@readonly="readonly", @disabled="disabled", @class = "form-control" })
                             @Html.ValidationMessageFor(m => m.idSuperior, "", new { @class = "text-danger" })
                         </div>
                         <div class="mb-3 col-md-6">
                             @Html.LabelFor(m => m.Poste, new { @class = "form-label" })
-                            @Html.DropDownListFor(m => m.idPoste,(SelectList) ViewBag.PostesList, "Selectionner un poste", new { @class = "form-control" })
+                            @Html.DropDownListFor(m => m.idPoste,(SelectList) ViewBag.PostesList, "Selectionner un poste", new {@readonly="readonly",@disabled="disabled",  @class = "form-control" })
                             @Html.ValidationMessageFor(m => m.idPoste, "", new { @class = "text-danger" })
                         </div>
                         <div class="mb-3 col-md-6">
                             @Html.LabelFor(m => m.UserName, new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                            @Html.TextBoxFor(m => m.UserName, new {@readonly="readonly", @disabled="disabled", @class = "form-control" })
                             @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
                         </div>
                         <div class="mb-3 col-md-6">
                             @Html.LabelFor(m => m.Email, new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                            @Html.TextBoxFor(m => m.Email, new {@readonly="readonly",@disabled="disabled",  @class = "form-control" })
                             @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
                         </div>
-                        <div class="mb-3 col-md-6">
-                            @Html.LabelFor(m => m.PasswordHash, "Mot de passe" , new { @class = "form-label" })
-                            @Html.PasswordFor(m => m.PasswordHash, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(m => m.PasswordHash, "", new { @class = "text-danger" })
-                        </div>
+
                         <div class="mb-3 col-md-6">
                             @Html.LabelFor(m => m.cin, new { @class = "form-label" })
-                            @Html.TextBoxFor(m => m.cin, new { @class = "form-control" })
+                            @Html.TextBoxFor(m => m.cin, new {@readonly="readonly", @disabled="disabled", @class = "form-control" })
                             @Html.ValidationMessageFor(m => m.cin, "", new { @class = "text-danger" })
                         </div>
                         <button type="submit" class="btn btn-primary">Enregistrer</button>
