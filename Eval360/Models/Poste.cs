@@ -10,7 +10,6 @@ namespace Eval360.Models
 
         public string libelle { get; set; }
 
-        public int niveau { get; set; }
 
         [ForeignKey("Direction")]
         public int? IdDirection { get; set; }

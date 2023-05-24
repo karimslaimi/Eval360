@@ -40,6 +40,7 @@
                                 </label>
                             </div>
                             <div class="datatable-search">
+                                <input class="datatable-input" placeholder="Search..." type="search" title="Search within table">
                                 <a class="btn btn-outline-primary" href="@Url.Action("create", "Poste")">Ajouter</a>
                             </div>
                         </div>
@@ -52,10 +53,7 @@
                                         </th>
                                         <th data-sortable="true" style="width: 28.22368421052632%;">
                                             <a href="#" class="datatable-sorter">Nom</a>
-                                        </th>
-                                        <th data-sortable="true" style="width: 28.22368421052632%;">
-                                            <a href="#" class="datatable-sorter">Niveau</a>
-                                        </th>
+                                        </th> 
                                         <th data-sortable="true" style="width: 28.22368421052632%;">
                                             <a href="#" class="datatable-sorter">Direction</a>
                                         </th>
@@ -76,7 +74,6 @@
                                         <tr data-index="@i">
                                             <td>@poste.Id</td>
                                             <td>@poste.libelle</td>
-                                            <td>@poste.niveau</td>
                                             <td>
                                                 @(poste.Direction != null? Html.Raw($"<a>{poste.Direction.name}</a>"): Html.Raw("N/A"))
                                             </td>   

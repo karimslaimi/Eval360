@@ -6,8 +6,35 @@
 * License: https://bootstrapmade.com/license/
 */
 (function() {
-  "use strict";
+    "use strict";
 
+    $(document).ready(function () {
+        $("#datatable").DataTable({
+            "language": {
+                "sProcessing": "chargement...",
+                "sZeroRecords": "Aucun résultat trouvé",
+                "sEmptyTable": "Aucune donnée disponible dans ce tableau",
+                "sInfo": "Affichage des enregistrements de _START_ à _END_ sur un total de _TOTAL_ enregistrements",
+                "sInfoEmpty": "Affichage des enregistrements de 0 à 0 sur 0 enregistrements",
+                "sInfoFiltered": "(filtrage d'un total de _MAX_ enregistrements)",
+                "sInfoPostFix": "",
+                "sSearch": "Rechercher:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Chargement...",
+                "oPaginate": {
+                    "sFirst": "Premier",
+                    "sLast": "Dernier",
+                    "sNext": "Suivant",
+                    "sPrevious": "Prècedent"
+                },
+                "oAria": {
+                    "sSortAscending": ": Activer pour trier les colonnes par ordre croissant",
+                    "sSortDescending": ": Activer pour trier la colonne par ordre décroissant"
+                }
+            }
+        }); 
+    });
   /**
    * Easy selector helper function
    */
@@ -299,11 +326,7 @@
   /**
    * Initiate Datatables
    */
-  const datatables = select('.datatable', true)
-  datatables.forEach(datatable => {
-    new simpleDatatables.DataTable(datatable);
-  })
-
+ 
   /**
    * Autoresize echart charts
    */
