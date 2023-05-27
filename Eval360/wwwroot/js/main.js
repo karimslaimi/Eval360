@@ -11,26 +11,25 @@
     $(document).ready(function () {
         $("#datatable").DataTable({
             "language": {
-                "sProcessing": "chargement...",
-                "sZeroRecords": "Aucun résultat trouvé",
-                "sEmptyTable": "Aucune donnée disponible dans ce tableau",
-                "sInfo": "Affichage des enregistrements de _START_ à _END_ sur un total de _TOTAL_ enregistrements",
-                "sInfoEmpty": "Affichage des enregistrements de 0 à 0 sur 0 enregistrements",
-                "sInfoFiltered": "(filtrage d'un total de _MAX_ enregistrements)",
-                "sInfoPostFix": "",
-                "sSearch": "Rechercher:",
-                "sUrl": "",
-                "sInfoThousands": ",",
-                "sLoadingRecords": "Chargement...",
-                "oPaginate": {
-                    "sFirst": "Premier",
-                    "sLast": "Dernier",
-                    "sNext": "Suivant",
-                    "sPrevious": "Prècedent"
+                processing: "Traitement en cours...",
+                search: "Rechercher&nbsp;:",
+                lengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
+                info: "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                infoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                infoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                infoPostFix: "",
+                loadingRecords: "Chargement en cours...",
+                zeroRecords: "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                emptyTable: "Aucune donn&eacutee disponible dans le tableau",
+                paginate: {
+                    first: "Premier",
+                    previous: "Pr&eacute;c&eacute;dent",
+                    next: "Suivant",
+                    last: "Dernier"
                 },
-                "oAria": {
-                    "sSortAscending": ": Activer pour trier les colonnes par ordre croissant",
-                    "sSortDescending": ": Activer pour trier la colonne par ordre décroissant"
+                aria: {
+                    sortAscending: ": activer pour trier la colonne par ordre croissant",
+                    sortDescending: ": activer pour trier la colonne par ordre décroissant"
                 }
             }
         }); 

@@ -1,4 +1,4 @@
-﻿@model Poste
+﻿@model Question
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -11,7 +11,7 @@
     <div class="card">
         <div class="card-body">
             <div class="card-title">
-                <h1>Ajouter un poste</h1>
+                <h1>Ajouter une question</h1>
             </div>
 
 
@@ -26,9 +26,9 @@
                         @Html.ValidationMessageFor(m => m.libelle, "", new { @class = "text-danger" })
                     </div>
                     <div class="mb-3 col-md-6">
-                        @Html.LabelFor(m => m.Direction, new { @class = "form-label" })
-                        @Html.DropDownListFor(m => m.Direction.id,(SelectList) ViewBag.DirectionsList, "Selectionner une Direction", new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Direction, "", new { @class = "text-danger" })
+                        @Html.LabelFor(m => m.axeEval, new { @class = "form-label" })
+                        @Html.DropDownListFor(m => m.axeEval.id,(SelectList) ViewBag.axeList, "Selectionner un Axe", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.axeEval, "", new { @class = "text-danger" })
                     </div>
 
                     <button type="submit" class="btn btn-primary">Enregistrer</button>

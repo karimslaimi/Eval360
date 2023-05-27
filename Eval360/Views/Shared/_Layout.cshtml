@@ -127,8 +127,9 @@
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
-            </li><!-- End Dashboard Nav -->
-
+            </li>
+            
+            <!-- End Dashboard Nav -->
             <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#direction-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-menu-button-wide"></i><span>Direction Et Postes</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -154,6 +155,26 @@
                     <span>Gestion Utilisateur</span>
                 </a>
             </li>
+
+             <!-- End Dashboard Nav -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#eval-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>Gestion D'évaluation</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="eval-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="@Url.Action("index","Axe")">
+                            <i class="bi bi-circle"></i><span>Axes d'évaluation</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("index", "Question")">
+                            <i class="bi bi-circle"></i><span>Gestion des Questions</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li><!-- End Components Nav -->
 
         </ul>
 

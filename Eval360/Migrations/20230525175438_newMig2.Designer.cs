@@ -4,6 +4,7 @@ using Eval360.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eval360.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230525175438_newMig2")]
+    partial class newMig2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,70 +23,6 @@ namespace Eval360.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("Eval360.Models.AxeEval", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("AxeEval");
-                });
-
-            modelBuilder.Entity("Eval360.Models.Compagnie", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<DateTime>("dateDebut")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("dateFin")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("employeeId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("employeeId");
-
-                    b.ToTable("Compagnie");
-                });
-
-            modelBuilder.Entity("Eval360.Models.CompagnieQuestion", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<int>("compagnieid")
-                        .HasColumnType("int");
-
-                    b.Property<int>("questionid")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("compagnieid");
-
-                    b.HasIndex("questionid");
-
-                    b.ToTable("CompagnieQuestions");
-                });
 
             modelBuilder.Entity("Eval360.Models.Direction", b =>
                 {
@@ -123,31 +61,6 @@ namespace Eval360.Migrations
                     b.HasIndex("IdDirection");
 
                     b.ToTable("Poste");
-                });
-
-            modelBuilder.Entity("Eval360.Models.Question", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<int>("axeEvalid")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("libelle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("axeEvalid");
-
-                    b.ToTable("Question");
                 });
 
             modelBuilder.Entity("Eval360.Models.User", b =>
@@ -382,34 +295,6 @@ namespace Eval360.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Eval360.Models.Compagnie", b =>
-                {
-                    b.HasOne("Eval360.Models.User", "employee")
-                        .WithMany()
-                        .HasForeignKey("employeeId");
-
-                    b.Navigation("employee");
-                });
-
-            modelBuilder.Entity("Eval360.Models.CompagnieQuestion", b =>
-                {
-                    b.HasOne("Eval360.Models.Compagnie", "compagnie")
-                        .WithMany("compagnieQuestions")
-                        .HasForeignKey("compagnieid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Eval360.Models.Question", "question")
-                        .WithMany("compagnieQuestions")
-                        .HasForeignKey("questionid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("compagnie");
-
-                    b.Navigation("question");
-                });
-
             modelBuilder.Entity("Eval360.Models.Poste", b =>
                 {
                     b.HasOne("Eval360.Models.Direction", "Direction")
@@ -418,17 +303,6 @@ namespace Eval360.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Direction");
-                });
-
-            modelBuilder.Entity("Eval360.Models.Question", b =>
-                {
-                    b.HasOne("Eval360.Models.AxeEval", "axeEval")
-                        .WithMany("questions")
-                        .HasForeignKey("axeEvalid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("axeEval");
                 });
 
             modelBuilder.Entity("Eval360.Models.User", b =>
@@ -497,16 +371,6 @@ namespace Eval360.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Eval360.Models.AxeEval", b =>
-                {
-                    b.Navigation("questions");
-                });
-
-            modelBuilder.Entity("Eval360.Models.Compagnie", b =>
-                {
-                    b.Navigation("compagnieQuestions");
-                });
-
             modelBuilder.Entity("Eval360.Models.Direction", b =>
                 {
                     b.Navigation("postes");
@@ -515,11 +379,6 @@ namespace Eval360.Migrations
             modelBuilder.Entity("Eval360.Models.Poste", b =>
                 {
                     b.Navigation("users");
-                });
-
-            modelBuilder.Entity("Eval360.Models.Question", b =>
-                {
-                    b.Navigation("compagnieQuestions");
                 });
 #pragma warning restore 612, 618
         }

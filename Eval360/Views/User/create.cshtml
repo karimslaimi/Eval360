@@ -80,7 +80,7 @@
                         </div>
                         <div class="mb-3 col-md-6">
                             @Html.LabelFor(m => m.UserType, "Type d'utilisateur", new { @class = "form-label" })
-                            @Html.DropDownList("StudentGender", Html.GetEnumSelectList<UserType>(), "Selectionner Role",new { @class = "form-control" })    
+                            @Html.DropDownListFor(m=>m.UserType, Html.GetEnumSelectList<UserType>(), "Selectionner Role",new { @class = "form-control" })    
                             @Html.ValidationMessageFor(m => m.UserType, "", new { @class = "text-danger" })
                         </div>
 

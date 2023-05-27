@@ -10,6 +10,11 @@ namespace Eval360.Data
         public DbSet<Poste> Poste { get; set; }
         public DbSet<User> User { get; set; }
 
+        public DbSet<AxeEval> AxeEval { get; set; }
+        public DbSet<Question> Question { get; set; }
+        public DbSet<Compagnie> Compagnie { get; set; }
+        public DbSet<CompagnieQuestion> CompagnieQuestions { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

@@ -28,9 +28,9 @@
                         @Html.ValidationMessageFor(m => m.libelle, "", new { @class = "text-danger" })
                     </div> 
                     <div class="mb-3 col-md-6">
-                        @Html.LabelFor(m => m.IdDirection, new { @class = "form-label" })
-                        @Html.DropDownListFor(m => m.IdDirection,(SelectList) ViewBag.DirectionsList, "Selectionner une Direction", new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.IdDirection, "", new { @class = "text-danger" })
+                        @Html.LabelFor(m => m.Direction, new { @class = "form-label" })
+                        @Html.DropDownListFor(m => m.Direction,(SelectList) ViewBag.DirectionsList, "Selectionner une Direction", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Direction, "", new { @class = "text-danger" })
                     </div>
 
                     <button type="submit" class="btn btn-primary">Enregistrer</button>

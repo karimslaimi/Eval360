@@ -44,12 +44,20 @@ namespace Eval360.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Poste poste)
         {
+            if (poste.Direction != null && poste.Direction.id != 0)
+            {
+                ModelState.Remove(nameof(poste.Direction.name));
+                ModelState.Remove("Direction.name");
+            }
             if (ModelState.IsValid)
             {
+                var direction = this.db.Directions.FirstOrDefault(x => x.id == poste.Direction.id);
+                poste.Direction = direction;
                 db.Add(poste);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.DirectionsList = new SelectList(this.db.Directions.ToArray(), "id", "name");
             return View(poste);
 
         }
@@ -71,8 +79,15 @@ namespace Eval360.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Poste poste)
         {
+            if (poste.Direction != null && poste.Direction.id != 0)
+            {
+                ModelState.Remove(nameof(poste.Direction.name));
+                ModelState.Remove("Direction.name");
+            }
             if (ModelState.IsValid)
             {
+                var direction = this.db.Directions.FirstOrDefault(x => x.id == poste.Direction.id);
+                poste.Direction = direction;
                 db.Entry(poste).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

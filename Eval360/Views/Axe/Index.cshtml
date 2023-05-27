@@ -1,13 +1,13 @@
-﻿@{ ViewBag.Title = "Directions"; Layout = "~/Views/Shared/_Layout.cshtml"; } 
+﻿@{ ViewBag.Title = "Axe d'évaluation"; Layout = "~/Views/Shared/_Layout.cshtml"; } 
 @using System.Globalization; @{ CultureInfo french = new CultureInfo("fr-FR"); }
-@model IEnumerable<Direction>;
+@model IEnumerable<AxeEval>;
 
 <div class="pagetitle">
     <h1>Dashboard</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="">Accueil</a></li>
-            <li class="breadcrumb-item active">Directions</li>
+            <li class="breadcrumb-item active">Axe d'évaluation</li>
         </ol>
     </nav>
 </div>
@@ -25,7 +25,7 @@
                         <div class="datatable-top">
                            
                             <div class="datatable-search">
-                                <a class="btn btn-outline-primary" href="@Url.Action("create", "Direction")">Ajouter</a>
+                                <a class="btn btn-outline-primary" href="@Url.Action("create", "Axe")">Ajouter</a>
                             </div>
                         </div>
                         <div class="datatable-container">
@@ -39,14 +39,14 @@
                                 </thead>
                                 <tbody>
 
-                                    @foreach (var direction in Model)
+                                    @foreach (var axe in Model)
                                     {
                                         <tr >
-                                            <td>@direction.id</td>
-                                            <td>@direction.name</td>
+                                            <td>@axe.id</td>
+                                            <td>@axe.name</td>
                                             <td>
-                                                <a class="btn btn-outline-success" href="@Url.Action("edit","Direction",new { id =direction.id})">Modifier</a> |
-                                                <a class="btn btn-outline-danger" href="@Url.Action("delete","Direction",new { id =direction.id})">supprimer</a>
+                                                <a class="btn btn-outline-success" href="@Url.Action("edit","Axe",new { id =axe.id})">Modifier</a> |
+                                                <a class="btn btn-outline-danger" href="@Url.Action("delete","Axe",new { id =axe.id})">supprimer</a>
                                             </td>
                                         </tr> 
                                       

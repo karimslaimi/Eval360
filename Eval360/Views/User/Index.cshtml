@@ -49,12 +49,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @{
-                                        int i = 0;
-                                    }
+                                    
                                     @foreach (var user in Model)
                                     {
-                                        <tr data-index="@i">
+                                        <tr >
                                             <td>@user.cin</td>
                                             <td>@user.preNom @user.Nom</td>
                                             <td>@user.Email</td>
@@ -68,15 +66,6 @@
                                                 </a>
                                             </td>
                                         </tr>
-                                        
-
-                                        i++;
-
-
-
-
-
-
                                     }
 
                                      

@@ -46,7 +46,7 @@ namespace Eval360.Controllers
                 if (result.Succeeded)
                 {
                     string role = user.UserType.ToString();
-                    await this.userManager.AddToRoleAsync(user, role);
+                    var res = await this.userManager.AddToRoleAsync(user, role);
                     return RedirectToAction("Index");
                 }
                 foreach (var error in result.Errors)
