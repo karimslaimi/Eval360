@@ -16,7 +16,8 @@ namespace Eval360.Models
 
         public string? idSuperior { get; set; }
         public User? superior { get; set; }
-
+        public List<Compagnie> compagnies { get; set; }
+        public List<CompagnieReponse> compagnieReponses { get; set; }
 
       public User() { }
     }
