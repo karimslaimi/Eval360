@@ -1,0 +1,83 @@
+﻿@model Compagnie
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="@Url.Content("~/js/jquery-3.7.0.min.js")"></script>
+<script>
+    $(document).ready(function () {
+        // Check All checkbox click event
+        $(".checkAll").click(function () {
+            var axeValue = $(this).val();
+
+            var checkboxes = $("input[data-axe='" + axeValue + "']");
+
+            $(checkboxes).prop("checked", $(this).prop("checked"));
+        });
+    });
+   
+</script>
+
+
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-title">
+                <h1>Ajouter une compagnie d'évaluation</h1>
+            </div>
+
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-theme-6" })
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        @Html.LabelFor(m => m.dateDebut,"Date début", new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.dateDebut,"{0:dd/MM/yyyy}", new {@type="date", @class = "form-control datepicker" })
+                        @Html.ValidationMessageFor(m => m.dateDebut, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        @Html.LabelFor(m => m.dateFin,"Date fin", new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.dateFin, "{0:dd/MM/yyyy}",new {@type="date", @class = "form-control datepicker" })
+                        @Html.ValidationMessageFor(m => m.dateFin, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        @Html.LabelFor(m => m.employee,"Employée à évaluer", new { @class = "form-label" })
+                        @Html.DropDownListFor(m => m.employee.Id,(SelectList) ViewBag.employeeList, "Selectionner un Employé", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.employee, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="row">
+
+
+                        @foreach (var axe in ViewBag.questionList)
+                        {
+                            <div class="mb-3 col-md-6 ">
+                                <div class="ml-5">
+                                    <label>
+                                        <input type="checkbox" class="checkAll" name="axe" value="@axe.id">
+                                        <span class="h4">@axe.name</span>
+                                    </label>
+                                </div>
+
+                                @foreach (var question in ((IEnumerable<Question>)axe.questions).Where(q => q.axeEval == axe))
+                                {
+                                    <div>
+                                        <label>
+                                            <input type="checkbox" class="form-check-input" name="questions" value="@question.id" data-axe="@axe.id">
+                                            @question.libelle
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

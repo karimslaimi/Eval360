@@ -111,7 +111,7 @@ async Task CreateRoles()
         {
             Nom = "admin",
             preNom = "admin",
-            UserName = "admin@admin.com",
+            UserName = "admin",
             Email = "admin@admin.com"
         };
         var chkUser = await UserManager.CreateAsync(usr, "karim123");
