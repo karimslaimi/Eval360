@@ -3,11 +3,13 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<link href="@Url.Content("~/css/style.css")" rel="stylesheet">
 <script src="@Url.Content("~/js/jquery-3.7.0.min.js")"></script>
+<script src="@Url.Content("~/js/select2.min.js")"></script>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         // Check All checkbox click event
-        $(".checkAll").click(function () {
+        $(".checkAll").click(function() {
             var axeValue = $(this).val();
 
             var checkboxes = $("input[data-axe='" + axeValue + "']");
@@ -15,7 +17,34 @@
             $(checkboxes).prop("checked", $(this).prop("checked"));
         });
     });
-   
+
+    $("#users").select2({
+        closeOnSelect: false,
+        placeholder: "Placeholder",
+        allowHtml: true,
+        allowClear: true,
+        tags: true // создает новые опции на лету
+    });
+
+    $('.icons_select2').select2({
+        width: "100%",
+        templateSelection: iformat,
+        templateResult: iformat,
+        allowHtml: true,
+        placeholder: "Placeholder",
+        dropdownParent: $('.select-icon'),//обавили класс
+        allowClear: true,
+        multiple: false
+    });
+
+
+    function iformat(icon, badge,) {
+        var originalOption = icon.element;
+        var originalOptionBadge = $(originalOption).data('badge');
+
+        return $('<span><i class="fa ' + $(originalOption).data('icon') + '"></i> ' + icon.text + '<span class="badge">' + originalOptionBadge + '</span></span>');
+    }
+
 </script>
 
 
@@ -47,7 +76,15 @@
                         @Html.DropDownListFor(m => m.employee.Id,(SelectList) ViewBag.employeeList, "Selectionner un Employé", new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.employee, "", new { @class = "text-danger" })
                     </div>
-
+                    <div>
+                        <label class="form-label">Les utilisateurs Concerné</label>
+                        <select id="users" name="users" class="form-control" multiple>
+                            @foreach (var user in (SelectList)ViewBag.employeeList)
+                            {
+                                <option value="@user.Value">@user.Text</option>
+                            }
+                        </select>
+                    </div>
                     <div class="row">
 
 

@@ -18,6 +18,7 @@ namespace Eval360.Models
         public User? superior { get; set; }
         public List<Compagnie> compagnies { get; set; }
         public List<CompagnieReponse> compagnieReponses { get; set; }
+        public List<CompagnieUser> compagnieUser { get; set; }
 
       public User() { }
     }
