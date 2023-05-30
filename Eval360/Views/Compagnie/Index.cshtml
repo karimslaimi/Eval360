@@ -27,7 +27,7 @@
                     <!-- Table with stripped rows -->
                     <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
                         <div class="datatable-top">
-                           
+
                             <div class="datatable-search">
                                 <a class="btn btn-outline-primary" href="@Url.Action("create", "Compagnie")">Ajouter</a>
                             </div>
@@ -37,7 +37,7 @@
                                 <thead>
                                     <tr>
                                         <th>Id </th>
-                                        <th>Employée</th> 
+                                        <th>Employée</th>
                                         <th>Date début</th>
                                         <th>Date fin</th>
                                         <th>Réponse</th>
@@ -45,20 +45,27 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                 
+
                                     @foreach (var compagnie in Model)
                                     {
-                                        <tr >
+                                        var responseCount = @compagnie.compagnieQuestions.Where(x => x.reponses != null).Select(x => x.reponses).Count();
+                                        <tr>
                                             <td>@compagnie.id</td>
                                             <td>@(compagnie.employee.Nom + " "+compagnie.employee.preNom) </td>
-                                            <td>@compagnie.dateDebut.ToString("dd/MM/yyyy") </td>   
+                                            <td>@compagnie.dateDebut.ToString("dd/MM/yyyy") </td>
                                             <td>@compagnie.dateFin.ToString("dd/MM/yyyy") </td>
-                                            <td>@compagnie.compagnieQuestions.Where(x=>x.reponses != null).Select(x=>x.reponses).Count()</td>
+                                            <td><a>@responseCount</a></td>
                                             <td>
-                                               Consulter les réponses
+                                                 
+                                                @if (compagnie.dateDebut > DateTime.Today)
+                                                {
+
+                                                    <a class="btn btn-primary" href="@Url.Action("edit","Compagnie", new{id = compagnie.id})">Modifier</a>
+                                                    <a class ="btn btn-danger">Supprimer</a>
+                                                }
                                             </td>
                                         </tr>
-                                         
+
 
 
                                     }

@@ -17,6 +17,7 @@
 
             $(checkboxes).prop("checked", $(this).prop("checked"));
         });
+
     });
 
 
@@ -28,7 +29,7 @@
             allowMultiple: true,
             placeholder: 'Sélectionner les utilisateurs concerné',
             allowClear: true
-               
+
         });
     });
 </script>
@@ -37,7 +38,7 @@
     <div class="card">
         <div class="card-body">
             <div class="card-title">
-                <h1>Ajouter une compagnie d'évaluation</h1>
+                <h1>Modifier une compagnie d'évaluation</h1>
             </div>
 
 
@@ -48,12 +49,12 @@
                 <div class="row">
                     <div class="mb-3 col-md-6">
                         @Html.LabelFor(m => m.dateDebut,"Date début", new { @class = "form-label" })
-                        @Html.TextBoxFor(m => m.dateDebut,"{0:dd/MM/yyyy}", new {@type="date", @class = "form-control datepicker" })
+                        @Html.TextBoxFor(m => m.dateDebut,"{0:yyyy-MM-dd}" , new {@type="date", @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.dateDebut, "", new { @class = "text-danger" })
                     </div>
                     <div class="mb-3 col-md-6">
                         @Html.LabelFor(m => m.dateFin,"Date fin", new { @class = "form-label" })
-                        @Html.TextBoxFor(m => m.dateFin, "{0:dd/MM/yyyy}",new {@type="date", @class = "form-control datepicker" })
+                        @Html.TextBoxFor(m => m.dateFin, "{0:yyyy-MM-dd}" , new {@type="date", @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.dateFin, "", new { @class = "text-danger" })
                     </div>
                     <div class="mb-3 col-md-6">
@@ -66,7 +67,17 @@
                         <select id="users" name="users" class="form-control" multiple>
                             @foreach (var user in (SelectList)ViewBag.employeeList)
                             {
-                                <option value="@user.Value">@user.Text</option>
+                                bool selected = Model.compagnieUser.Any(x => x.user.Id == user.Value);
+                                if (selected)
+                                {
+                                    <option value="@user.Value" selected>@user.Text</option>
+
+                                }
+                                else
+                                {
+                                    <option value="@user.Value">@user.Text</option>
+
+                                }
                             }
                         </select>
                     </div>
@@ -85,9 +96,19 @@
 
                                 @foreach (var question in ((IEnumerable<Question>)axe.questions).Where(q => q.axeEval == axe))
                                 {
+                                    bool selected = Model.compagnieQuestions.Any(x => x.question.id == question.id);
                                     <div>
                                         <label>
-                                            <input type="checkbox" class="form-check-input" name="questions" value="@question.id" data-axe="@axe.id">
+                                            @if (selected)
+                                            {
+                                                <input type="checkbox" class="form-check-input" name="questions" value="@question.id" data-axe="@axe.id" checked="checked">
+
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" class="form-check-input" name="questions" value="@question.id" data-axe="@axe.id">
+
+                                            }
                                             @question.libelle
                                         </label>
                                     </div>

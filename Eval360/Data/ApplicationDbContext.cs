@@ -14,6 +14,7 @@ namespace Eval360.Data
         public DbSet<Question> Question { get; set; }
         public DbSet<Compagnie> Compagnie { get; set; }
         public DbSet<CompagnieQuestion> CompagnieQuestions { get; set; }
+        public DbSet<CompagnieUser> CompagnieUser { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

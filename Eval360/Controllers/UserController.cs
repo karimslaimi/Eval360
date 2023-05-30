@@ -39,6 +39,9 @@ namespace Eval360.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(User user)
         {
+            ModelState.Remove("compagnies");
+            ModelState.Remove("compagnieReponses");
+            ModelState.Remove("compagnieUser");
             if (ModelState.IsValid)
             {
 
@@ -87,6 +90,9 @@ namespace Eval360.Controllers
             ViewBag.PostesList = new SelectList(this.db.Poste.ToArray(), "Id", "libelle");
             ViewBag.UserList = new SelectList(this.db.User.Select(x => new { Id = x.Id, libelle = x.Nom + " " + x.preNom }).ToArray(), "Id", "libelle");
             var userToUpdate = await this.userManager.FindByIdAsync(user.Id);
+            ModelState.Remove("compagnies");
+            ModelState.Remove("compagnieReponses");
+            ModelState.Remove("compagnieUser");
 
             if (user.PasswordHash == null)
             {
@@ -167,6 +173,9 @@ namespace Eval360.Controllers
             ModelState.Remove("idSuperior");
             ModelState.Remove("superior");
             ModelState.Remove("Email");
+            ModelState.Remove("compagnies");
+            ModelState.Remove("compagnieReponses");
+            ModelState.Remove("compagnieUser");
             // Validate the user input.
             if (!ModelState.IsValid)
             {

@@ -6,7 +6,7 @@
         public DateTime dateDebut { get; set; }
         public DateTime dateFin { get; set; }
         public User employee { get; set; }
-        public List<CompagnieQuestion> compagnieQuestions { get; set; } = new();
-        public List<CompagnieUser> compagnieUser { get; set; } = new();
+        public List<CompagnieQuestion> compagnieQuestions { get; set; } 
+        public List<CompagnieUser> compagnieUser { get; set; } 
     }
 }
