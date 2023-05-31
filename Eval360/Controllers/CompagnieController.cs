@@ -115,17 +115,54 @@ namespace Eval360.Controllers
         // POST: CompagnieController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Compagnie compagnie, IFormCollection collection)
         {
             //check if the users have changed, the questions too
-            try
+
+            string questionsValue = collection["questions"];
+            string usersValue = collection["users"];
+
+            // Split the field value
+            string[] questionsList = questionsValue.Split(',');
+            string[] usersList = usersValue.Split(',');
+            //the list of fetched users and questions
+            var questions = this.db.Question.Where(x => questionsList.Contains(x.id.ToString())).ToList();
+            var users = this.db.Users.Where(x => usersList.Contains(x.Id)).ToList();
+            //the current list of users and questions
+            var compagnieQuestions = this.db.CompagnieQuestions.Where(x => x.compagnie.id == compagnie.id).Include(s=>s.question).Select(s=>s.question).ToList();
+            var compagnieUsers = this.db.CompagnieUser.Where(x => x.compagnie.id == compagnie.id).Include(s => s.user).Select(s => s.user).ToList();
+
+            var questionToAdd = this.questionToAdd(compagnieQuestions, questions);
+            var questionToRemove = this.questionToRemove(compagnieQuestions, questions);
+
+            var usersToRemove = this.usersToRemove(compagnieUsers, users);
+            var userToAdd = this.userToAdd(compagnieUsers, users);
+
+            ModelState.Remove("compagnieUser");
+            ModelState.Remove("compagnieQuestions");
+            ModelState.Remove("compagnieReponses");
+            ModelState.Remove("employee.compagnieReponses");
+            ModelState.Remove("employee.compagnieUser");
+            ModelState.Remove("employee.compagnies");
+
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                db.Entry(compagnie).State = EntityState.Modified;
+
+                this.removeQuestionFromCompagnie(compagnie, questionToRemove);
+                this.AddQuestions(compagnie, questionToAdd);
+
+                this.removeUserFromCompagnie(compagnie, usersToRemove);
+                this.AddUsers(compagnie, userToAdd);
+
+                db.SaveChanges();
+
+                return RedirectToAction("index");
             }
-            catch
-            {
-                return View();
-            }
+            var _users = this.userManager.GetUsersInRoleAsync("Employee").Result.ToArray();
+            ViewBag.employeeList = new SelectList(_users.Select(x => new { Id = x.Id, libelle = x.Nom + " " + x.preNom }).ToArray(), "Id", "libelle");
+            ViewBag.questionList = this.db.AxeEval.Include(x => x.questions).ToArray();
+            return View(compagnie);
         }
 
         // GET: CompagnieController/Delete/5
@@ -148,5 +185,79 @@ namespace Eval360.Controllers
                 return View();
             }
         }
+
+        #region Questions
+
+        private List<Question> questionToAdd(List<Question> currentQuestions, List<Question> fetchedQuestions)
+        {
+            var intersection = currentQuestions.Intersect(fetchedQuestions);
+            return fetchedQuestions.Except(currentQuestions).ToList();
+        }
+        private List<Question> questionToRemove(List<Question> currentQuestions, List<Question> fetchedQuestions)
+        {
+            var intersection = currentQuestions.Intersect(fetchedQuestions);
+            return currentQuestions.Except(fetchedQuestions).ToList();
+        }
+
+        private void removeQuestionFromCompagnie(Compagnie compagnie, List<Question> questions)
+        {
+            var listToRemove = this.db.CompagnieQuestions.Where(x => questions.Contains(x.question));
+            this.db.CompagnieQuestions.RemoveRange(listToRemove);
+            this.db.SaveChanges();
+        }
+
+        private void AddQuestions(Compagnie compagnie, List<Question> questions)
+        {
+            List<CompagnieQuestion> compagnieQuestions = new();
+            var comp = new Compagnie();
+            comp.id = compagnie.id;
+            foreach (var question in questions)
+            {
+               
+                CompagnieQuestion compagnieQuestion = new CompagnieQuestion();
+                compagnieQuestion.compagnie = comp;
+                compagnieQuestion.question = question;
+                compagnieQuestions.Add(compagnieQuestion);
+            }
+            this.db.CompagnieQuestions.AddRange(compagnieQuestions);
+            this.db.SaveChanges();
+        }
+        #endregion
+
+        #region users
+
+        private List<User> userToAdd(List<User> currentUsers, List<User> fetchedUsers)
+        {
+            var intersection = currentUsers.Intersect(fetchedUsers);
+            return fetchedUsers.Except(currentUsers).ToList();
+        }
+        private List<User> usersToRemove(List<User> currentUsers, List<User> fetchedUsers)
+        {
+            var intersection = currentUsers.Intersect(fetchedUsers);
+            return currentUsers.Except(fetchedUsers).ToList();
+        }
+
+        private void removeUserFromCompagnie(Compagnie compagnie, List<User> users)
+        {
+            var listToRemove = this.db.CompagnieUser.Where(x => users.Contains(x.user));
+            this.db.CompagnieUser.RemoveRange(listToRemove);
+            this.db.SaveChanges();
+        }
+
+        private void AddUsers(Compagnie compagnie, List<User> users)
+        {
+            List<CompagnieUser> compagnieUsers = new();
+            foreach (var user in users)
+            {
+                CompagnieUser compagnieUser = new CompagnieUser();
+                compagnieUser.compagnie = compagnie;
+                compagnieUser.user = user;
+                compagnieUsers.Add(compagnieUser);
+            }
+            this.db.CompagnieUser.AddRange(compagnieUsers);
+            this.db.SaveChanges();
+        }
+        #endregion
+
     }
 }

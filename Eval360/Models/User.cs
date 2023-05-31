@@ -2,7 +2,7 @@
 
 namespace Eval360.Models
 {
-    public class User : IdentityUser
+    public class User : IdentityUser, IEquatable<User>
     {
         public string? cin { get;set; }
         public string? Nom { get; set; }
@@ -21,5 +21,12 @@ namespace Eval360.Models
         public List<CompagnieUser> compagnieUser { get; set; }
 
       public User() { }
+
+        public bool Equals(User? other)
+        {
+            if (other == null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return other.Id == this.Id;
+        }
     }
 }
