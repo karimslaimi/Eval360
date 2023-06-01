@@ -58,7 +58,7 @@ namespace Eval360.Controllers
             string[] questionsList = questionsValue.Split(',');
             string[] usersList = usersValue.Split(',');
 
-            var questions = this.db.Question.Where(x => questionsList.Contains(x.id.ToString())).ToArray();
+            var questions = this.db.Question.Where(x => questionsList.Contains(x.id.ToString())).ToList();
             var users = this.db.Users.Where(x => usersList.Contains(x.Id)).ToList();
             ModelState.Remove("compagnieUser");
             ModelState.Remove("compagnieQuestions");
@@ -73,31 +73,16 @@ namespace Eval360.Controllers
                 compagnie.employee = this.userManager.FindByIdAsync(compagnie.employee.Id).Result;
                 this.db.Compagnie.Add(compagnie);
                 this.db.SaveChanges();
-                List<CompagnieQuestion> compagnieQuestions = new();
-                foreach (var question in questions)
-                {
-                    CompagnieQuestion compagnieQuestion = new CompagnieQuestion();
-                    compagnieQuestion.compagnie = compagnie;
-                    compagnieQuestion.question = question;
-                    compagnieQuestions.Add(compagnieQuestion);
-                }
-                this.db.CompagnieQuestions.AddRange(compagnieQuestions);
+                
+                this.AddQuestions(compagnie, questions);
 
-                List<CompagnieUser> compagnieUsers = new();
-                foreach (var user in users)
-                {
-                    CompagnieUser compagnieUser = new CompagnieUser();
-                    compagnieUser.compagnie = compagnie;
-                    compagnieUser.user = user;
-                    compagnieUsers.Add(compagnieUser);
-                }
-                this.db.CompagnieUser.AddRange(compagnieUsers);
-                this.db.SaveChanges();
+                this.AddUsers(compagnie, users);
+
                 return RedirectToAction("index");
             }
 
             var usersVB = this.userManager.GetUsersInRoleAsync("Employee").Result.ToArray();
-            ViewBag.employeeList = new SelectList(users.Select(x => new { Id = x.Id, libelle = x.Nom + " " + x.preNom }).ToArray(), "Id", "libelle");
+            ViewBag.employeeList = new SelectList(usersVB.Select(x => new { Id = x.Id, libelle = x.Nom + " " + x.preNom }).ToArray(), "Id", "libelle");
             ViewBag.questionList = this.db.AxeEval.Include(x => x.questions).ToArray();
             return View(compagnie);
         }
@@ -141,21 +126,21 @@ namespace Eval360.Controllers
             ModelState.Remove("compagnieUser");
             ModelState.Remove("compagnieQuestions");
             ModelState.Remove("compagnieReponses");
-            ModelState.Remove("employee.compagnieReponses");
-            ModelState.Remove("employee.compagnieUser");
-            ModelState.Remove("employee.compagnies");
+            ModelState.Remove("employee");
+          
 
             if (ModelState.IsValid)
             {
                 db.Entry(compagnie).State = EntityState.Modified;
-
+                db.SaveChanges();
+                
                 this.removeQuestionFromCompagnie(compagnie, questionToRemove);
                 this.AddQuestions(compagnie, questionToAdd);
 
                 this.removeUserFromCompagnie(compagnie, usersToRemove);
                 this.AddUsers(compagnie, userToAdd);
 
-                db.SaveChanges();
+                
 
                 return RedirectToAction("index");
             }
@@ -168,23 +153,20 @@ namespace Eval360.Controllers
         // GET: CompagnieController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var compagnie = this.db.Compagnie.Where(x=>x.id == id).Include(x=>x.compagnieUser).Include(x=>x.compagnieQuestions).FirstOrDefault();
+            if (compagnie == null)
+            {
+                return NotFound("compagnie not found");
+            }
+            this.removeQuestionFromCompagnie(compagnie, compagnie.compagnieQuestions.Select(x=>x.question).ToList());
+            this.removeUserFromCompagnie(compagnie, compagnie.compagnieUser.Select(x => x.user).ToList());
+
+            this.db.Compagnie.Remove(compagnie);
+            this.db.SaveChanges();
+            return RedirectToAction("index");
         }
 
-        // POST: CompagnieController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+         
 
         #region Questions
 
@@ -201,7 +183,7 @@ namespace Eval360.Controllers
 
         private void removeQuestionFromCompagnie(Compagnie compagnie, List<Question> questions)
         {
-            var listToRemove = this.db.CompagnieQuestions.Where(x => questions.Contains(x.question));
+            var listToRemove = this.db.CompagnieQuestions.Where(x => questions.Contains(x.question) && x.compagnie.id == compagnie.id);
             this.db.CompagnieQuestions.RemoveRange(listToRemove);
             this.db.SaveChanges();
         }
@@ -209,14 +191,13 @@ namespace Eval360.Controllers
         private void AddQuestions(Compagnie compagnie, List<Question> questions)
         {
             List<CompagnieQuestion> compagnieQuestions = new();
-            var comp = new Compagnie();
-            comp.id = compagnie.id;
+            
             foreach (var question in questions)
             {
                
                 CompagnieQuestion compagnieQuestion = new CompagnieQuestion();
-                compagnieQuestion.compagnie = comp;
-                compagnieQuestion.question = question;
+                compagnieQuestion.compagnieId = compagnie.id;
+                compagnieQuestion.questionId = question.id;
                 compagnieQuestions.Add(compagnieQuestion);
             }
             this.db.CompagnieQuestions.AddRange(compagnieQuestions);
@@ -239,7 +220,7 @@ namespace Eval360.Controllers
 
         private void removeUserFromCompagnie(Compagnie compagnie, List<User> users)
         {
-            var listToRemove = this.db.CompagnieUser.Where(x => users.Contains(x.user));
+            var listToRemove = this.db.CompagnieUser.Where(x => users.Contains(x.user) && x.compagnie.id == compagnie.id);
             this.db.CompagnieUser.RemoveRange(listToRemove);
             this.db.SaveChanges();
         }
@@ -250,8 +231,8 @@ namespace Eval360.Controllers
             foreach (var user in users)
             {
                 CompagnieUser compagnieUser = new CompagnieUser();
-                compagnieUser.compagnie = compagnie;
-                compagnieUser.user = user;
+                compagnieUser.idCompagnie = compagnie.id;
+                compagnieUser.userId = user.Id;
                 compagnieUsers.Add(compagnieUser);
             }
             this.db.CompagnieUser.AddRange(compagnieUsers);

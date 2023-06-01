@@ -38,6 +38,15 @@ namespace Eval360.Controllers
                     User user = await this.userManager.FindByNameAsync(model.userName);
                     // Redirect to the appropriate page after successful login
                     //todo redirect based on role
+                    if (this.userManager.IsInRoleAsync(user, "Admin").Result)
+                    {
+                        return RedirectToAction("index", "Home");
+
+                    }else if(this.userManager.IsInRoleAsync(user, "Employee").Result)
+                    {
+                        return RedirectToAction("index", "Employee");
+
+                    }
                     return RedirectToAction("Index", "Home");
                 }
                 else

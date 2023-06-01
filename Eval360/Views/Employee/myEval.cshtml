@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Postes"; Layout = "~/Views/Shared/_Layout.cshtml";
+     Layout = "~/Views/Shared/_LayoutEmployee.cshtml";
 }
 @using System.Globalization; @{
     CultureInfo french = new CultureInfo("fr-FR");
@@ -26,12 +26,7 @@
 
                     <!-- Table with stripped rows -->
                     <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
-                        <div class="datatable-top">
-
-                            <div class="datatable-search">
-                                <a class="btn btn-outline-primary" href="@Url.Action("create", "Compagnie")">Ajouter</a>
-                            </div>
-                        </div>
+                         
                         <div class="datatable-container">
                             <table id="datatable" class="display">
                                 <thead>

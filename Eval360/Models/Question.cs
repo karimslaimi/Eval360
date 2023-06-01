@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Eval360.Models
 {
@@ -8,6 +9,9 @@ namespace Eval360.Models
         public int id { get; set; }
         public string libelle { get; set; }
         public bool isEnabled { get; set; }
+
+        public int idEval { get; set; }
+        [ForeignKey("idEval")]
         public AxeEval axeEval { get; set; }
 
         public List<CompagnieQuestion> compagnieQuestions { get; set; } = new();

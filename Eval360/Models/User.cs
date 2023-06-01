@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Eval360.Models
 {
@@ -12,10 +13,13 @@ namespace Eval360.Models
         public DateTime? dateEmbauche { get; set; }
 
         public int? idPoste { get; set; }
+        [ForeignKey("idPoste")]
         public Poste? Poste { get; set; }
 
         public string? idSuperior { get; set; }
+        [ForeignKey("idSuperior")]
         public User? superior { get; set; }
+
         public List<Compagnie> compagnies { get; set; }
         public List<CompagnieReponse> compagnieReponses { get; set; }
         public List<CompagnieUser> compagnieUser { get; set; }

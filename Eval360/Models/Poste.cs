@@ -11,9 +11,9 @@ namespace Eval360.Models
         public string libelle { get; set; }
 
 
-        [ForeignKey("Direction")]
+        
         public int? IdDirection { get; set; }
-
+        [ForeignKey("IdDirection")]
         public Direction? Direction { get; set; }
 
         public ICollection<User>? users { get; set; }
