@@ -1,11 +1,12 @@
 ﻿using Eval360.Models;
+using Eval360.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace Eval360.Controllers
 {
-    [Authorize]
+    [CustomAuthorization(Roles = "Admin")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

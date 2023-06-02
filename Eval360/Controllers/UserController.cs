@@ -1,5 +1,7 @@
 ﻿using Eval360.Data;
 using Eval360.Models;
+using Eval360.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -7,23 +9,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Eval360.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
 
         private UserManager<User> userManager;
         private ApplicationDbContext db;
-        //todo finish profile editing
+
         public UserController(UserManager<User> userManager, ApplicationDbContext db)
         {
             this.userManager = userManager;
             this.db = db;
         }
-
+        [CustomAuthorization(Roles = "Admin")]
         public IActionResult Index()
         {
             return View(this.db.User.Include(x => x.Poste).ToArray());
         }
 
+      
+        [CustomAuthorization(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> create()
         {
@@ -34,7 +39,9 @@ namespace Eval360.Controllers
 
         }
 
+        
         // POST: PosteController/Create
+        [CustomAuthorization(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(User user)
@@ -64,6 +71,8 @@ namespace Eval360.Controllers
 
         }
 
+        
+        [CustomAuthorization(Roles = "Admin")]
         // GET: PosteController/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
@@ -83,7 +92,8 @@ namespace Eval360.Controllers
         }
 
 
-
+        
+        [CustomAuthorization(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Edit(User user)
         {
@@ -133,7 +143,8 @@ namespace Eval360.Controllers
             return View(user);
         }
 
-
+       
+        [Authorize]
         public async Task<IActionResult> profile(string username)
         {
             ViewBag.PostesList = new SelectList(this.db.Poste.ToArray(), "Id", "libelle");
@@ -152,7 +163,7 @@ namespace Eval360.Controllers
             return View(user);
         }
 
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> profile(User user)
         {
@@ -220,7 +231,9 @@ namespace Eval360.Controllers
             return View(user);
         }
 
-
+       
+        
+        [CustomAuthorization(Roles = "Admin")]
         public async Task<IActionResult> disable(string id)
         {
             User user = this.userManager.FindByIdAsync(id).Result;

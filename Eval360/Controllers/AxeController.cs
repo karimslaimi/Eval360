@@ -1,11 +1,13 @@
 ﻿using Eval360.Data;
 using Eval360.Models;
+using Eval360.Security;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Eval360.Controllers
 {
+    [CustomAuthorization(Roles = "Admin")]
     public class AxeController : Controller
     {
         ApplicationDbContext db;
