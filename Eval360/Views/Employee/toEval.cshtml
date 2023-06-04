@@ -54,12 +54,10 @@
                                             <td><a>@responseCount</a></td>
                                             <td>
                                                  
-                                                @if (compagnie.dateDebut > DateTime.Today)
+                                                @if (compagnie.dateDebut <= DateTime.Today)
                                                 {
-
-                                                    <a class="btn btn-primary" href="@Url.Action("edit","Compagnie", new{id = compagnie.id})">Modifier</a>
-                                                    <a class ="btn btn-danger" href="@Url.Action("delete", "Compagnie", new {id = compagnie.id})">Supprimer</a>
-                                                }
+                                                    <a class="btn btn-primary" href="@Url.Action("doEval","Employee", new{id = compagnie.id})">Evaluer</a> 
+                                                } 
                                             </td>
                                         </tr>
 

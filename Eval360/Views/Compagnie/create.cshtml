@@ -57,6 +57,17 @@
                         @Html.ValidationMessageFor(m => m.employee, "", new { @class = "text-danger" })
                     </div>
                     <div class="mb-3 col-md-6">
+                        @Html.LabelFor(m => m.qualiteEvaluateur,"Qualité de l’évaluateur", new { @class = "form-label" })
+                        @Html.DropDownList("qualiteEvaluateur", new SelectList(new[]
+                    {
+                    new SelectListItem { Value = "Autoévaluation", Text = "Autoévaluation" },
+                    new SelectListItem { Value = "Hiérarchie", Text = "Hiérarchie" },
+                    new SelectListItem { Value = "Collègue", Text = "Collègue" },
+                    new SelectListItem { Value = "Collaborateur", Text = "Collaborateur" }
+                    }, "Value", "Text"), "Selectionner la Qualité de l’évaluateur ", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.qualiteEvaluateur, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="mb-3 col-md-6">
                         @Html.LabelFor(m => m.dateDebut,"Date début", new { @class = "form-label" })
                         @Html.TextBoxFor(m => m.dateDebut,"{0:dd/MM/yyyy}", new {@type="date", @class = "form-control datepicker" })
                         @Html.ValidationMessageFor(m => m.dateDebut, "", new { @class = "text-danger" })

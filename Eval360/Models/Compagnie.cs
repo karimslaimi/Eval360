@@ -6,6 +6,7 @@ namespace Eval360.Models
     {
         public int id { get; set; }
         public string title { get; set; }
+        public string qualiteEvaluateur { get; set; }
         public DateTime dateDebut { get; set; }
         public DateTime dateFin { get; set; }
         public string? userId { get; set; }

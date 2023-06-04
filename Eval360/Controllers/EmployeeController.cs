@@ -64,5 +64,21 @@ namespace Eval360.Controllers
         }
 
 
+        public IActionResult doEval(int id)
+        {
+            var compagnie = this.db.Compagnie.Find(id);
+            var compagnieQuestions = this.db.CompagnieQuestions.Where(x => x.compagnieId == id).Include(q=>q.question).ThenInclude(a=>a.axeEval).ToArray();
+            ViewBag.compagnieQuestion = compagnieQuestions;
+            return View(compagnie);
+        }
+
+        [HttpPost]
+        public IActionResult doEval(Compagnie compagnie, IFormCollection collection)
+        {
+
+            return View(compagnie);
+
+        }
+
     }
 }
