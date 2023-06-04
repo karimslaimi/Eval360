@@ -44,7 +44,7 @@ namespace Eval360.Controllers
         {
             var users = this.userManager.GetUsersInRoleAsync("Employee").Result.ToArray();
             ViewBag.employeeList = new SelectList(users.Select(x => new { Id = x.Id, libelle = x.Nom + " " + x.preNom }).ToArray(), "Id", "libelle");
-            ViewBag.questionList = this.db.AxeEval.Include(x => x.questions).ToArray();
+            ViewBag.questionList = this.db.AxeEval.Include(x => x.questions.Where(q=>q.isEnabled)).ToArray();
             return View(new Compagnie());
         }
 

@@ -1,0 +1,80 @@
+﻿@{
+     Layout = "~/Views/Shared/_LayoutEmployee.cshtml";
+}
+@using System.Globalization; @{
+    CultureInfo french = new CultureInfo("fr-FR");
+}
+@model IEnumerable<Compagnie>;
+
+<div class="pagetitle">
+    <h1>Dashboard</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="">Accueil</a></li>
+            <li class="breadcrumb-item active">Compagies d'évaluation</li>
+        </ol>
+    </nav>
+</div>
+<!-- End Page Title -->
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Liste des compagnies</h5>
+
+                    <!-- Table with stripped rows -->
+                    <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+                         
+                        <div class="datatable-container">
+                            <table id="datatable" class="display">
+                                <thead>
+                                    <tr>
+                                        <th>Id </th>
+                                        <th>Titre</th>
+                                        <th>Employée</th>
+                                        <th>Date début</th>
+                                        <th>Date fin</th>
+                                        <th>Réponse</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var compagnie in Model)
+                                    {
+                                        var responseCount = @compagnie.compagnieQuestions.Where(x => x.reponses != null).Select(x => x.reponses).Count();
+                                        <tr>
+                                            <td>@compagnie.id</td>
+                                            <td>@compagnie.title</td>
+                                            <td>@(compagnie.employee.Nom + " "+compagnie.employee.preNom) </td>
+                                            <td>@compagnie.dateDebut.ToString("dd/MM/yyyy") </td>
+                                            <td>@compagnie.dateFin.ToString("dd/MM/yyyy") </td>
+                                            <td><a>@responseCount</a></td>
+                                            <td>
+                                                 
+                                                @if (compagnie.dateDebut > DateTime.Today)
+                                                {
+
+                                                    <a class="btn btn-primary" href="@Url.Action("edit","Compagnie", new{id = compagnie.id})">Modifier</a>
+                                                    <a class ="btn btn-danger" href="@Url.Action("delete", "Compagnie", new {id = compagnie.id})">Supprimer</a>
+                                                }
+                                            </td>
+                                        </tr>
+
+
+
+                                    }
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- End Table with stripped rows -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -75,15 +75,14 @@ namespace Eval360.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Question question)
         {
-            if (question.axeEval != null && question.axeEval.id != 0)
+            if (question.idAxe != null && question.idAxe != 0)
             {
-                ModelState.Remove(nameof(question.axeEval.name));
-                ModelState.Remove("axeEval.name");
+                ModelState.Remove("axeEval");
+
             }
 
             if (ModelState.IsValid)
             {
-                var axe = this.db.AxeEval.FirstOrDefault(x => x.id == question.axeEval.id);
                 db.Entry(question).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

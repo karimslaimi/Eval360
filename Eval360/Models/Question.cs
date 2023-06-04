@@ -10,9 +10,9 @@ namespace Eval360.Models
         public string libelle { get; set; }
         public bool isEnabled { get; set; }
 
-        public int idEval { get; set; }
-        [ForeignKey("idEval")]
-        public AxeEval axeEval { get; set; }
+        public int idAxe { get; set; }
+        [ForeignKey("idAxe")]
+        public virtual AxeEval axeEval { get; set; }
 
         public List<CompagnieQuestion> compagnieQuestions { get; set; } = new();
 
