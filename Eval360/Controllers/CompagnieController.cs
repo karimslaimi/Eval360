@@ -149,6 +149,7 @@ namespace Eval360.Controllers
             var _users = this.userManager.GetUsersInRoleAsync("Employee").Result.ToArray();
             ViewBag.employeeList = new SelectList(_users.Select(x => new { Id = x.Id, libelle = x.Nom + " " + x.preNom }).ToArray(), "Id", "libelle");
             ViewBag.questionList = this.db.AxeEval.Include(x => x.questions).ToArray();
+            compagnie = this.db.Compagnie.Where(x => x.id == compagnie.id).Include(x => x.compagnieUser).Include(x => x.compagnieQuestions).FirstOrDefault();
             return View(compagnie);
         }
 

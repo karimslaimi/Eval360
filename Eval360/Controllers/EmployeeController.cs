@@ -3,6 +3,7 @@ using Eval360.Models;
 using Eval360.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Eval360.Controllers
@@ -40,8 +41,8 @@ namespace Eval360.Controllers
         {
             var currentUser = this.userManager.FindByNameAsync(User.Identity.Name).Result;
 
-            var evals = this.db.Compagnie.Where(compagnie => compagnie.compagnieUser.Any(u => u.userId == currentUser.Id))
-                .Include(e=>e.employee).Include(x=>x.compagnieQuestions).ThenInclude(r=>r.reponses).ToArray();
+            var evals = this.db.Compagnie.Where(compagnie =>compagnie.dateDebut<= DateTime.Now && compagnie.dateFin>= DateTime.Now 
+            && compagnie.compagnieUser.Any(u => u.userId == currentUser.Id)).Include(e=>e.employee).Include(x=>x.compagnieQuestions).ThenInclude(r=>r.reponses).ToArray();
 
             /*from compagnie in this.db.Compagnie
                     join compagnieUser in this.db.CompagnieUser on compagnie.id equals compagnieUser.idCompagnie
@@ -66,8 +67,11 @@ namespace Eval360.Controllers
 
         public IActionResult doEval(int id)
         {
+            var users = this.userManager.GetUsersInRoleAsync("Employee").Result.ToArray();
+            ViewBag.employeeList = new SelectList(users.Select(x => new { Id = x.Id, libelle = x.Nom + " " + x.preNom }).ToArray(), "Id", "libelle");
             var compagnie = this.db.Compagnie.Find(id);
             var compagnieQuestions = this.db.CompagnieQuestions.Where(x => x.compagnieId == id).Include(q=>q.question).ThenInclude(a=>a.axeEval).ToArray();
+            ViewBag.axe = this.db.AxeEval.ToArray();
             ViewBag.compagnieQuestion = compagnieQuestions;
             return View(compagnie);
         }
