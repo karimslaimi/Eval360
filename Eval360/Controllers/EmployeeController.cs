@@ -42,12 +42,9 @@ namespace Eval360.Controllers
             var currentUser = this.userManager.FindByNameAsync(User.Identity.Name).Result;
 
             var evals = this.db.Compagnie.Where(compagnie =>compagnie.dateDebut<= DateTime.Now && compagnie.dateFin>= DateTime.Now 
-            && compagnie.compagnieUser.Any(u => u.userId == currentUser.Id)).Include(e=>e.employee).Include(x=>x.compagnieQuestions).ThenInclude(r=>r.reponses).ToArray();
+            && compagnie.compagnieUser.Any(u => u.userId == currentUser.Id) && !compagnie.compagnieQuestions.Any(q=>q.reponses.Any(u=>u.userId == currentUser.Id)))
+                .Include(e=>e.employee).Include(x=>x.compagnieQuestions).ThenInclude(r=>r.reponses).ToArray();
 
-            /*from compagnie in this.db.Compagnie
-                    join compagnieUser in this.db.CompagnieUser on compagnie.id equals compagnieUser.idCompagnie
-                    where compagnieUser.userId == currentUser.Id && compagnie.dateFin >= DateTime.Now
-                    select new { compagnie, compagnie.compagnieQuestions };*/
             return View(evals);
         }
 
@@ -55,11 +52,8 @@ namespace Eval360.Controllers
         {
             var currentUser = this.userManager.FindByNameAsync(User.Identity.Name).Result;
 
-            var evals = from compagnie in this.db.Compagnie
-                        join compagnieQuestion in this.db.CompagnieQuestions on compagnie.id equals compagnieQuestion.compagnieId
-                        join compagnieResponse in this.db.CompagnieResponse on compagnieQuestion.id equals compagnieResponse.compagnieQuestionId
-                        where compagnieResponse.userId == currentUser.Id
-                        select compagnie;
+            var evals = this.db.Compagnie.Where(x=> x.compagnieQuestions.Any(s=>s.reponses.Any(s => s.userId == currentUser.Id)))
+                .Include(x => x.compagnieQuestions).ThenInclude(r => r.reponses).ToArray();
 
             return View(evals);
         }
@@ -79,8 +73,22 @@ namespace Eval360.Controllers
         [HttpPost]
         public IActionResult doEval(Compagnie compagnie, IFormCollection collection)
         {
+            var currentUser = this.userManager.FindByNameAsync(User.Identity.Name).Result;
+            var compagnieQuestions = this.db.CompagnieQuestions.Where(x => x.compagnieId == compagnie.id).Include(x => x.question).ToArray();
+            List<CompagnieReponse> reponses = new();
+            foreach(CompagnieQuestion compagnieQuestion in compagnieQuestions)
+            {
+                var compagnieResponse = new CompagnieReponse();
+                compagnieResponse.compagnieQuestionId = compagnieQuestion.id;
+                compagnieResponse.userId = currentUser.Id;
+                compagnieResponse.note = int.Parse(collection[(compagnieQuestion.questionId).ToString()]);
+                reponses.Add(compagnieResponse);
+            }
 
-            return View(compagnie);
+            this.db.CompagnieResponse.AddRange(reponses);
+            this.db.SaveChanges();
+
+            return RedirectToAction("toEval");
 
         }
 

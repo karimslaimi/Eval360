@@ -19,20 +19,69 @@
         });
     });
 
+    $('input[type="radio"][required]').on('change', function() {
+        if ($(this).is(':checked')) {
+            $(this).closest('[name="radio-group"]').removeClass('invalid');
+        } else {
+            $(this).closest('[name="radio-group"]').addClass('invalid');
+        }
+    });
 
 
 </script>
 <style>
-       .line {
-        display: flex;
-    }
+:focus {
+  outline: 0;
+  border-color: #2260ff;
+  box-shadow: 0 0 0 4px #b5c9fc;
+}
 
-    .radio-wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-right: 10px;
-    }
+.mydict div {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 0.8rem;
+  justify-content: center;
+}
+
+.mydict input[type="radio"] {
+  clip: rect(0 0 0 0);
+  clip-path: inset(100%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.mydict input[type="radio"]:checked + span {
+  box-shadow: 0 0 0 0.0625em #0043ed;
+  background-color: #dee7ff;
+  z-index: 1;
+  color: #0043ed;
+}
+
+label span {
+  display: block;
+  cursor: pointer;
+  background-color: #fff;
+  padding: 0.375em .75em;
+  position: relative;
+  margin-left: .0625em;
+  box-shadow: 0 0 0 0.0625em #b5bfd9;
+  letter-spacing: .05em;
+  color: #3e4963;
+  text-align: center;
+  transition: background-color .5s ease;
+}
+
+label:first-child span {
+  border-radius: .375em 0 0 .375em;
+}
+
+label:last-child span {
+  border-radius: 0 .375em .375em 0;
+}
+
 </style>
 
 <div class="container">
@@ -92,25 +141,43 @@
                                 <div class="mb-3 col-md-6 ">
                                     <div class="ml-5">
                                         <label>
-                                            <input type="checkbox" class="checkAll" name="axe" value="@axe.id">
-                                            <span class="h4">@axe.name</span>
+                                            <h3 style="color: #002060" class="h4">@axe.name</h3>
                                         </label>
                                     </div>
 
                                     @foreach (var question in ((IEnumerable<CompagnieQuestion>)ViewBag.compagnieQuestion).Where(q => q.question.idAxe == axe.id))
                                     {
-                                        <div class="line">
+                                        <h5 style="text-decoration: underline">@question.question.libelle</h5>
+
+
+
+                                        <div class="mydict">
+                                            <label >
+                                             <input type="radio" name="@question.questionId" value="1" id="@question.questionId" required>
+                                                <span class="radio-label" for="@question.questionId">Faux</span>
+                                            </label>
+
                                             <label>
-                                                @question.question.libelle
-                                                @for (int j = 1; j <= 5; j++)
-                                                {
-                                                    <div class="radio-wrapper">
-                                                        <input type="radio" name="@question.id" value="@j" id="@question.id">
-                                                        <label for="@question.id">@j</label>
-                                                    </div>
-                                                }
+                                                 <input type="radio" name="@question.questionId" value="2" id="@question.questionId" required>
+                                                <span class="radio-label" for="@question.questionId">Plutôt faux</span>
+                                            </label>
+
+                                            <label>
+                                                 <input type="radio" name="@question.questionId" value="3" id="@question.questionId" required>
+                                                <span class="radio-label" for="@question.questionId">Moyennement vrai</span>
+                                            </label>
+
+                                            <label>
+                                                 <input type="radio" name="@question.questionId" value="4" id="@question.questionId" required>
+                                                <span class="radio-label" for="@question.questionId">Plutôt vrai</span>
+                                            </label>
+
+                                            <label>
+                                                 <input type="radio" name="@question.questionId" value="5" id="@question.questionId" required>
+                                                <span class="radio-label" for="@question.questionId">Vrai</span>
                                             </label>
                                         </div>
+
                                     }
                                 </div>
                             }
