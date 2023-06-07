@@ -33,7 +33,7 @@ namespace Eval360.Controllers
         public IActionResult myEval()
         {
             var currentUser = this.userManager.FindByNameAsync(User.Identity.Name).Result;
-            var evals = this.db.Compagnie.Where(x => x.userId == currentUser.Id).Include(x => x.compagnieQuestions).ToList();
+            var evals = this.db.Compagnie.Where(x => x.userId == currentUser.Id && x.dateDebut<= DateTime.Now).Include(x => x.compagnieQuestions).ThenInclude(r=>r.reponses).Include(x=>x.compagnieUser).ThenInclude(x=>x.user).ToList();
             return View(evals);
         }
 
@@ -53,7 +53,7 @@ namespace Eval360.Controllers
             var currentUser = this.userManager.FindByNameAsync(User.Identity.Name).Result;
 
             var evals = this.db.Compagnie.Where(x=> x.compagnieQuestions.Any(s=>s.reponses.Any(s => s.userId == currentUser.Id)))
-                .Include(x => x.compagnieQuestions).ThenInclude(r => r.reponses).ToArray();
+                .Include(x => x.compagnieQuestions).ThenInclude(r => r.reponses).Include(x=>x.employee).ToArray();
 
             return View(evals);
         }
@@ -90,6 +90,25 @@ namespace Eval360.Controllers
 
             return RedirectToAction("toEval");
 
+        }
+
+        public IActionResult consultEval(int id)
+        {
+            var users = this.userManager.GetUsersInRoleAsync("Employee").Result.ToArray();
+            ViewBag.employeeList = new SelectList(users.Select(x => new { Id = x.Id, libelle = x.Nom + " " + x.preNom }).ToArray(), "Id", "libelle");
+            var compagnie = this.db.Compagnie.Find(id);
+            var compagnieQuestions = this.db.CompagnieQuestions.Where(x => x.compagnieId == id).Include(q => q.question).ThenInclude(a => a.axeEval).Include(x=>x.reponses).ToArray();
+            ViewBag.axe = this.db.AxeEval.ToArray();
+            ViewBag.compagnieQuestion = compagnieQuestions;
+            return View(compagnie);
+        }
+
+        public IActionResult consultMyEvals(int id)
+        {
+            var reponses = this.db.CompagnieResponse.Where(x => x.CompagnieQuestion.compagnie.dateFin > DateTime.Now 
+            && x.CompagnieQuestion.compagnie.employee.UserName == User.Identity.Name).Include(x=>x.CompagnieQuestion.compagnie).ToArray();
+
+            return View(reponses);
         }
 
     }

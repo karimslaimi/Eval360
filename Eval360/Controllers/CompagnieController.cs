@@ -169,7 +169,19 @@ namespace Eval360.Controllers
             return RedirectToAction("index");
         }
 
-         
+         //todo fix the links, in employee he is not redirected to the correct page for consulting, the same for admin
+        public IActionResult Reponses(int id)
+        {
+            var users = this.userManager.GetUsersInRoleAsync("Employee").Result.ToArray();
+            ViewBag.employeeList = new SelectList(users.Select(x => new { Id = x.Id, libelle = x.Nom + " " + x.preNom }).ToArray(), "Id", "libelle");
+            var compagnie = this.db.Compagnie.Find(id);
+            var compagnieQuestions = this.db.CompagnieQuestions.Where(x => x.compagnieId == id).Include(q => q.question).ThenInclude(a => a.axeEval).Include(x => x.reponses).ToArray();
+            ViewBag.axe = this.db.AxeEval.ToArray();
+            ViewBag.compagnieQuestion = compagnieQuestions;
+            return View(compagnie);
+        }
+
+
 
         #region Questions
 

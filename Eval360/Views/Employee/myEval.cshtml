@@ -44,7 +44,8 @@
 
                                     @foreach (var compagnie in Model)
                                     {
-                                        var responseCount = @compagnie.compagnieQuestions.Where(x => x.reponses != null).Select(x => x.reponses).Count();
+                                        var responseCount = @compagnie.compagnieQuestions.Where(x => x.reponses != null)
+                                        .Select(x => x.reponses).Sum(x=>x.Count)/compagnie.compagnieQuestions.Count();
                                         <tr>
                                             <td>@compagnie.id</td>
                                             <td>@compagnie.title</td>
@@ -54,11 +55,14 @@
                                             <td><a>@responseCount</a></td>
                                             <td>
                                                  
-                                                @if (compagnie.dateDebut > DateTime.Today)
+                                                @if (compagnie.dateDebut <= DateTime.Today 
+                                                && !compagnie.compagnieQuestions.Any(q=>q.reponses.Any(x=>x.user.UserName == Context.User.Identity.Name)))
                                                 {
-
-                                                    <a class="btn btn-primary" href="@Url.Action("edit","Compagnie", new{id = compagnie.id})">Modifier</a>
-                                                    <a class ="btn btn-danger" href="@Url.Action("delete", "Compagnie", new {id = compagnie.id})">Supprimer</a>
+                                                    <a href="@Url.Action("doEval","Employee", new{id = compagnie.id})">Evaluer</a>
+                                                }
+                                                @if(compagnie.dateFin < DateTime.Today)
+                                                {
+                                                    <a href="@Url.Action("doEval","Employee", new{id = compagnie.id})">Consulter</a>
                                                 }
                                             </td>
                                         </tr>

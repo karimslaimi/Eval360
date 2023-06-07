@@ -4,7 +4,7 @@
 @using System.Globalization; @{
     CultureInfo french = new CultureInfo("fr-FR");
 }
-@model IEnumerable<Compagnie>;
+@model IEnumerable<CompagnieReponse>;
 
 <div class="pagetitle">
     <h1>Dashboard</h1>
@@ -42,15 +42,12 @@
                                 </thead>
                                 <tbody>
 
-                                    @foreach (var compagnie in Model)
+                                    @foreach (var reponse in Model)
                                     {
-                                        var responseCount = @compagnie.compagnieQuestions
-                                        .SelectMany(q => q.reponses)
-                                        .Select(r => r.user)
-                                        .Distinct()
-                                        .Count();
+                                        var compagnie = reponse.CompagnieQuestion.compagnie;
+                                        var responseCount = Model.Count();
                                         <tr>
-                                            <td>@compagnie.id</td>
+                                            <td>@reponse.id</td>
                                             <td>@compagnie.title</td>
                                             <td>@(compagnie.employee.Nom + " "+compagnie.employee.preNom) </td>
                                             <td>@compagnie.dateDebut.ToString("dd/MM/yyyy") </td>

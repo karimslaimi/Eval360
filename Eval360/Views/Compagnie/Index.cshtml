@@ -65,6 +65,10 @@
                                                     <a class="btn btn-primary" href="@Url.Action("edit","Compagnie", new{id = compagnie.id})">Modifier</a>
                                                     <a class ="btn btn-danger" href="@Url.Action("delete", "Compagnie", new {id = compagnie.id})">Supprimer</a>
                                                 }
+                                                 @if(compagnie.dateDebut < DateTime.Today)
+                                                {
+                                                    <a href="@Url.Action("Reponses","Compagnie", new{id = compagnie.id})">Consulter</a>
+                                                }
                                             </td>
                                         </tr>
 
