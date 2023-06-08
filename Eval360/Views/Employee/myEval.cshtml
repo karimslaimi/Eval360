@@ -62,7 +62,7 @@
                                                 }
                                                 @if(compagnie.dateFin < DateTime.Today)
                                                 {
-                                                    <a href="@Url.Action("doEval","Employee", new{id = compagnie.id})">Consulter</a>
+                                                    <a href="@Url.Action("consultEval","Employee", new{id = compagnie.id})">Consulter</a>
                                                 }
                                             </td>
                                         </tr>

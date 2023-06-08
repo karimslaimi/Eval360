@@ -49,7 +49,7 @@
 
                                     @foreach (var compagnie in Model)
                                     {
-                                        var responseCount = @compagnie.compagnieQuestions.Where(x => x.reponses != null).Select(x => x.reponses).Count();
+                                        var responseCount = @compagnie.compagnieQuestions.Where(x => x.reponses != null).SelectMany(x => x.reponses).GroupBy(u=>u.user).Count();
                                         <tr>
                                             <td>@compagnie.id</td>
                                             <td>@compagnie.title</td>

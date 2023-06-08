@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = "~/Views/Shared/_LayoutEmployee.cshtml";
+    ViewBag.Title = "Postes"; Layout = "~/Views/Shared/_LayoutGestionnaire.cshtml";
 }
 @using System.Globalization; @{
     CultureInfo french = new CultureInfo("fr-FR");
@@ -26,7 +26,12 @@
 
                     <!-- Table with stripped rows -->
                     <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+                        <div class="datatable-top">
 
+                            <div class="datatable-search">
+                                <a class="btn btn-outline-primary" href="@Url.Action("create", "Compagnie")">Ajouter</a>
+                            </div>
+                        </div>
                         <div class="datatable-container">
                             <table id="datatable" class="display">
                                 <thead>
@@ -44,11 +49,7 @@
 
                                     @foreach (var compagnie in Model)
                                     {
-                                        var responseCount = @compagnie.compagnieQuestions
-                                        .SelectMany(q => q.reponses)
-                                        .Select(r => r.user)
-                                        .Distinct()
-                                        .Count();
+                                        var responseCount = @compagnie.compagnieQuestions.Where(x => x.reponses != null).SelectMany(x => x.reponses).GroupBy(u=>u.user).Count();
                                         <tr>
                                             <td>@compagnie.id</td>
                                             <td>@compagnie.title</td>
@@ -57,7 +58,11 @@
                                             <td>@compagnie.dateFin.ToString("dd/MM/yyyy") </td>
                                             <td><a>@responseCount</a></td>
                                             <td>
-                                                <a href="@Url.Action("consultReponse", "Employee", new {compagnieId = compagnie.id, userId = ViewBag.UserId})">Consulter</a>
+                                                
+                                                 @if(compagnie.dateDebut < DateTime.Today)
+                                                {
+                                                    <a href="@Url.Action("responseList","Gestionnaire", new{id = compagnie.id})">Consulter</a>
+                                                }
                                             </td>
                                         </tr>
 

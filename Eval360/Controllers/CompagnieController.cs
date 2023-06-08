@@ -29,7 +29,7 @@ namespace Eval360.Controllers
         // GET: CompagnieController
         public ActionResult Index()
         {
-            var compagnies = this.db.Compagnie.Include(x => x.employee).Include(x=>x.compagnieQuestions).Include(x=>x.compagnieUser).ToArray();
+            var compagnies = this.db.Compagnie.Include(x => x.employee).Include(x=>x.compagnieQuestions).ThenInclude(x=>x.reponses).ThenInclude(u=>u.user).Include(x=>x.compagnieUser).ToArray();
             return View(compagnies) ;
         }
 
@@ -169,15 +169,41 @@ namespace Eval360.Controllers
             return RedirectToAction("index");
         }
 
-         //todo fix the links, in employee he is not redirected to the correct page for consulting, the same for admin
+
+
         public IActionResult Reponses(int id)
+        {
+            var responses = this.db.CompagnieResponse
+                .Where(r => r.CompagnieQuestion.compagnie.id == id)
+                .GroupBy(r => new {
+                    userId = r.userId, 
+                    name =r.user.preNom + " " + r.user.Nom, 
+                    compagnie = r.CompagnieQuestion.compagnie.title,
+                    compagnieId = r.CompagnieQuestion.compagnieId 
+                })
+                .Select(s=> new {
+                    compagnie = s.Key.compagnie, 
+                    user = s.Key.name,
+                    note = s.Average(n=>n.note),
+                    userId = s.Key.userId,
+                    compagnieId = s.Key.compagnieId
+                })
+                .ToList();
+            ViewBag.reponses = responses;
+            return View();
+        }
+
+        public IActionResult consultResponse(string userId, int compagnieId)
         {
             var users = this.userManager.GetUsersInRoleAsync("Employee").Result.ToArray();
             ViewBag.employeeList = new SelectList(users.Select(x => new { Id = x.Id, libelle = x.Nom + " " + x.preNom }).ToArray(), "Id", "libelle");
-            var compagnie = this.db.Compagnie.Find(id);
-            var compagnieQuestions = this.db.CompagnieQuestions.Where(x => x.compagnieId == id).Include(q => q.question).ThenInclude(a => a.axeEval).Include(x => x.reponses).ToArray();
+            var compagnie = this.db.Compagnie.Find(compagnieId);
+            var compagnieQuestions = this.db.CompagnieQuestions.Where(x => x.compagnieId == compagnieId).Include(q => q.question).ThenInclude(a => a.axeEval).Include(x => x.reponses).ToArray();
             ViewBag.axe = this.db.AxeEval.ToArray();
+            ViewBag.responses = this.db.CompagnieResponse.Where(x=>x.CompagnieQuestion.compagnieId == compagnieId && x.userId == userId);
             ViewBag.compagnieQuestion = compagnieQuestions;
+            var user = this.userManager.FindByIdAsync(userId).Result;
+            ViewBag.name = user.preNom + " " + user.Nom;
             return View(compagnie);
         }
 

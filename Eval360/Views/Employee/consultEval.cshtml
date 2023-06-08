@@ -1,192 +1,69 @@
-﻿@model Compagnie
-
-@{
-    Layout = "~/Views/Shared/_LayoutEmployee.cshtml";
+﻿@{
+    ViewBag.Title = "Postes"; Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<link href="@Url.Content("~/css/style.css")" rel="stylesheet">
-<script src="@Url.Content("~/js/jquery-3.7.0.min.js")"></script>
-<script src="@Url.Content("~/js/select2.min.js")"></script>
+@using System.Globalization; @{
+    CultureInfo french = new CultureInfo("fr-FR");
+}
+@model IEnumerable<CompagnieQuestion>;
 
-<script>
-    $(document).ready(function() {
-        // Check All checkbox click event
-        $(".checkAll").click(function() {
-            var axeValue = $(this).val();
+<div class="pagetitle">
+    <h1>Dashboard</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="">Accueil</a></li>
+            <li class="breadcrumb-item active">Compagies d'évaluation</li>
+        </ol>
+    </nav>
+</div>
+<!-- End Page Title -->
 
-            var checkboxes = $("input[data-axe='" + axeValue + "']");
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Liste des compagnies</h5>
 
-            $(checkboxes).prop("checked", $(this).prop("checked"));
-        });
-    });
+                    <!-- Table with stripped rows -->
+                    <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+                        
+                        <div class="datatable-container">
+                            <table id="datatable" class="display">
+                                <thead>
+                                    <tr>
+                                        <th>Titre</th>
+                                        <th>Evalué par</th>
+                                        
+                                        <th>Note</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-    $('input[type="radio"][required]').on('change', function() {
-        if ($(this).is(':checked')) {
-            $(this).closest('[name="radio-group"]').removeClass('invalid');
-        } else {
-            $(this).closest('[name="radio-group"]').addClass('invalid');
-        }
-    });
-
-
-</script>
-<style>
-    :focus {
-        outline: 0;
-        border-color: #2260ff;
-        box-shadow: 0 0 0 4px #b5c9fc;
-    }
-
-    .mydict div {
-        display: flex;
-        flex-wrap: wrap;
-        margin-top: 0.8rem;
-        justify-content: center;
-    }
-
-    .mydict input[type="radio"] {
-        clip: rect(0 0 0 0);
-        clip-path: inset(100%);
-        height: 1px;
-        overflow: hidden;
-        position: absolute;
-        white-space: nowrap;
-        width: 1px;
-    }
-
-        .mydict input[type="radio"]:checked + span {
-            box-shadow: 0 0 0 0.0625em #0043ed;
-            background-color: #dee7ff;
-            z-index: 1;
-            color: #0043ed;
-        }
-
-    label span {
-        display: block;
-        cursor: pointer;
-        background-color: #fff;
-        padding: 0.375em .75em;
-        position: relative;
-        margin-left: .0625em;
-        box-shadow: 0 0 0 0.0625em #b5bfd9;
-        letter-spacing: .05em;
-        color: #3e4963;
-        text-align: center;
-        transition: background-color .5s ease;
-    }
-
-    label:first-child span {
-        border-radius: .375em 0 0 .375em;
-    }
-
-    label:last-child span {
-        border-radius: 0 .375em .375em 0;
-    }
-
-</style>
-
-<div class="container">
-    <div class="card">
-        <div class="card-body">
-            <div class="card-title">
-                <h1>Ajouter une compagnie d'évaluation</h1>
-            </div>
-
-
-            @using (Html.BeginForm())
-            {
-                @Html.AntiForgeryToken()
-                @Html.ValidationSummary(true, "", new { @class = "text-theme-6" })
-                <div class="row">
-                    <div class="mb-3 col-md-6">
-                        @Html.LabelFor(m => m.title,"Titre", new { @class = "form-label" })
-                        @Html.TextBoxFor(m => m.title ,new {@class = "form-control", @disabled="disabled" })
-                        @Html.ValidationMessageFor(m => m.title, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="mb-3 col-md-6">
-                        @Html.LabelFor(m => m.employee,"Employée à évaluer", new { @class = "form-label" })
-                        @Html.DropDownListFor(m => m.userId,(SelectList) ViewBag.employeeList, "Selectionner un Employé", new { @class = "form-control", @disabled="disabled"  })
-                        @Html.ValidationMessageFor(m => m.employee, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="mb-3 col-md-6">
-                        @Html.LabelFor(m => m.qualiteEvaluateur,"Qualité de l’évaluateur", new { @class = "form-label" })
-                        @Html.DropDownList("qualiteEvaluateur", new SelectList(new[]
-                    {
-                    new SelectListItem { Value = "Autoévaluation", Text = "Autoévaluation" },
-                    new SelectListItem { Value = "Hiérarchie", Text = "Hiérarchie" },
-                    new SelectListItem { Value = "Collègue", Text = "Collègue" },
-                    new SelectListItem { Value = "Collaborateur", Text = "Collaborateur" }
-                    }, "Value", "Text"), "Selectionner la Qualité de l’évaluateur ", new { @class = "form-control" , @disabled="disabled" })
-                        @Html.ValidationMessageFor(m => m.qualiteEvaluateur, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="mb-3 col-md-6">
-                        @Html.LabelFor(m => m.dateDebut,"Date début", new { @class = "form-label" })
-                        @Html.TextBoxFor(m => m.dateDebut,"{0:dd/MM/yyyy}", new { @class = "form-control", @readonly = "readonly", @disabled = "disabled"  })
-                        @Html.ValidationMessageFor(m => m.dateDebut, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="mb-3 col-md-6">
-                        @Html.LabelFor(m => m.dateFin,"Date fin", new { @class = "form-label" })
-                        @Html.TextBoxFor(m => m.dateFin, "{0:dd/MM/yyyy}", new { @class = "form-control", @readonly = "readonly", @disabled = "disabled" })
-                        @Html.ValidationMessageFor(m => m.dateFin, "", new { @class = "text-danger" })
-                    </div>
-
-                    <div class="row">
-
-
-                        @foreach (var axe in (IEnumerable<AxeEval>)ViewBag.axe)
-                        {
-                            if ((((IEnumerable<CompagnieQuestion>)ViewBag.compagnieQuestion).Any(x => x.question.idAxe == axe.id)))
-                            {
-
-
-                                <div class="mb-3 col-md-6 ">
-                                    <div class="ml-5">
-                                        <label>
-                                            <h3 style="color: #002060" class="h4">@axe.name</h3>
-                                        </label>
-                                    </div>
-
-                                    @foreach (var question in ((IEnumerable<CompagnieQuestion>)ViewBag.compagnieQuestion).Where(q => q.question.idAxe == axe.id))
+                                    @foreach (var response in ViewBag.reponses)
                                     {
-                                        <h5 style="text-decoration: underline">@question.question.libelle</h5>
-                                        var resp = question.reponses.Where(x => x.user.UserName == Context.User.Identity.Name).FirstOrDefault().note;
+                                        <tr>
+                                            <td>@response.compagnie</td>
+                                            <td>Anonyme</td>
+                                            <td>@response.note </td>
+                                            
+                                            <td>
+                                                 <a href="@Url.Action("consultReponse", "Employee", new {compagnieId = response.compagnieId, userId = response.userId})">Voir</a>
+                                            </td>
+                                        </tr>
 
 
-                                        <div class="mydict">
-                                            <label>
-                                                <input type="radio" name="@question.questionId" value="1" id="@question.questionId" @(resp == 1?"checked":"") disabled="disabled">
-                                                <span class="radio-label" for="@question.questionId">Faux</span>
-                                            </label>
-
-                                            <label>
-                                                <input type="radio" name="@question.questionId" value="2" id="@question.questionId" @(resp == 2?"checked":"") disabled="disabled">
-                                                <span class="radio-label" for="@question.questionId">Plutôt faux</span>
-                                            </label>
-
-                                            <label>
-                                                <input type="radio" name="@question.questionId" value="3" id="@question.questionId" @(resp == 3?"checked":"") disabled="disabled">
-                                                <span class="radio-label" for="@question.questionId">Moyennement vrai</span>
-                                            </label>
-
-                                            <label>
-                                                <input type="radio" name="@question.questionId" value="4" id="@question.questionId" @(resp == 4?"checked":"") disabled="disabled">
-                                                <span class="radio-label" for="@question.questionId">Plutôt vrai</span>
-                                            </label>
-
-                                            <label>
-                                                <input type="radio" name="@question.questionId" value="5" id="@question.questionId" @(resp == 5?"checked":"") disabled="disabled">
-                                                <span class="radio-label" for="@question.questionId">Vrai</span>
-                                            </label>
-                                        </div>
 
                                     }
-                                </div>
-                            }
-                        }
 
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-
+                    <!-- End Table with stripped rows -->
                 </div>
-            }
+            </div>
         </div>
     </div>
-</div>
+</section>
