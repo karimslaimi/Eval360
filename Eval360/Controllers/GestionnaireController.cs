@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Eval360.Controllers
 {
-    public class GestionnaitreController : Controller
+    public class GestionnaireController : Controller
     {
         ApplicationDbContext db;
         private UserManager<User> userManager;
 
-        public GestionnaitreController(ApplicationDbContext dbContext, UserManager<User> userManager)
+        public GestionnaireController(ApplicationDbContext dbContext, UserManager<User> userManager)
         {
             this.db = dbContext;
             this.userManager = userManager;

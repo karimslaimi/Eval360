@@ -26,9 +26,9 @@
                         @Html.ValidationMessageFor(m => m.libelle, "", new { @class = "text-danger" })
                     </div>
                     <div class="mb-3 col-md-6">
-                        @Html.LabelFor(m => m.axeEval, new { @class = "form-label" })
+                        @Html.LabelFor(m => m.idAxe, new { @class = "form-label" })
                         @Html.DropDownListFor(m => m.idAxe,(SelectList) ViewBag.axeList, "Selectionner un Axe", new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.axeEval, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(m => m.idAxe, "", new { @class = "text-danger" })
                     </div>
 
                     <button type="submit" class="btn btn-primary">Enregistrer</button>

@@ -34,6 +34,7 @@
                                         <th>Id </th>
                                         <th>Titre</th>
                                         <th>Employée</th>
+                                        <th>Qualité de l'évaluateur</th>
                                         <th>Date début</th>
                                         <th>Date fin</th>
                                         <th>Réponse</th>
@@ -53,6 +54,7 @@
                                             <td>@compagnie.id</td>
                                             <td>@compagnie.title</td>
                                             <td>@(compagnie.employee.Nom + " "+compagnie.employee.preNom) </td>
+                                            <td>@compagnie.qualiteEvaluateur</td>
                                             <td>@compagnie.dateDebut.ToString("dd/MM/yyyy") </td>
                                             <td>@compagnie.dateFin.ToString("dd/MM/yyyy") </td>
                                             <td><a>@responseCount</a></td>
