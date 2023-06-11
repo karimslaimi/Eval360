@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Diagnostics;
 
 namespace Eval360.Controllers
@@ -35,8 +36,16 @@ namespace Eval360.Controllers
                 AverageResponse = ae.questions
                                     .SelectMany(q => q.compagnieQuestions)
                                     .SelectMany(cq => cq.reponses)
-                                    .Average(r => r.note)
-            }).OrderBy(a => a.AxeEvalName).Select(x=>x.AverageResponse);
+                                    .Average(r => (double?)r.note)
+            }).OrderBy(a => a.AxeEvalName).Select(x => x.AverageResponse);
+
+
+            var res = this.db.Directions.Select(d => new
+                            {
+                                name = d.name,
+                                value = d.postes.SelectMany(p => p.users.Select(e => e.compagnies)).Count()
+                            }).ToList();
+            ViewBag.compagnieByDirection = JsonConvert.SerializeObject(res);
             return View();
         }
 
