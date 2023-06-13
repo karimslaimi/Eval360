@@ -88,7 +88,7 @@ namespace Eval360.Controllers
             }
             if (ModelState.IsValid)
             {
-                var direction = this.db.Directions.FirstOrDefault(x => x.id == poste.Direction.id);
+                var direction = this.db.Directions.FirstOrDefault(x => x.id == poste.IdDirection);
                 poste.Direction = direction;
                 db.Entry(poste).State = EntityState.Modified;
                 db.SaveChanges();

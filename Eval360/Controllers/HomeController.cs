@@ -25,6 +25,7 @@ namespace Eval360.Controllers
 
         public IActionResult Index()
         {
+            var directions = this.db.Directions.OrderBy(x => x.id).ToList();
             ViewBag.userCount = this.userManager.GetUsersInRoleAsync("Employee").Result.Count();
             ViewBag.compagnieCount = this.db.Compagnie.Count();
             ViewBag.responseCount = this.db.CompagnieResponse.GroupBy(x => new { x.userId, x.CompagnieQuestion.compagnieId }).Count();
@@ -41,11 +42,14 @@ namespace Eval360.Controllers
 
 
             var res = this.db.Directions.Select(d => new
-                            {
-                                name = d.name,
-                                value = d.postes.SelectMany(p => p.users.Select(e => e.compagnies)).Count()
-                            }).ToList();
+            {
+                name = d.name,
+                value = this.db.Compagnie.Where(c => c.employee.Poste.IdDirection == d.id).Count()
+            }).ToList();
             ViewBag.compagnieByDirection = JsonConvert.SerializeObject(res);
+            ViewBag.compagnieCountByMonth = JsonConvert.SerializeObject(this.getCompagnieByMonthChart(directions));
+            ViewBag.DirectionList = JsonConvert.SerializeObject(directions);
+            ViewBag.responseByAxeAndDirections = JsonConvert.SerializeObject(this.getAxeValueByDirection(directions));
             return View();
         }
 
@@ -59,5 +63,52 @@ namespace Eval360.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
+        private dynamic getAxeValueByDirection(List<Direction> directions)
+        {
+            var data = new Dictionary<string, List<object>>();
+
+            var axeEval = this.db.AxeEval.OrderBy(x => x.name).ToArray();
+            
+            
+            foreach( var direction in directions)
+            {
+                var vals = new double[axeEval.Length];
+
+                foreach(var axe in axeEval)
+                {
+                    var average = this.db.CompagnieResponse.Where(x => x.CompagnieQuestion.question.idAxe == axe.id
+                    && x.CompagnieQuestion.compagnie.employee.Poste.IdDirection == direction.id).Average(x => x.note);
+                }
+                data.Add()
+            }
+            return averageNotesByAxe;
+
+        }
+
+        private dynamic getCompagnieByMonthChart(List<Direction> directions)
+        {
+
+            // Create a dictionary to store the data
+            List<Object> data = new List<object>();
+
+            // Iterate over the directions and get the number of companies created in each month
+            foreach (var direction in directions)
+            {
+                var companiesPerMonth = new List<int>();
+                for (int month = 1; month <= 12; month++)
+                {
+                    var companiesCreated = this.db.Compagnie
+                        .Where(c => c.dateDebut.Month == month && c.employee.Poste.IdDirection == direction.id);
+                    companiesPerMonth.Add(companiesCreated.Count());
+                }
+                data.Add(new { name = direction.name, data = companiesPerMonth });
+            }
+
+
+            return data;
+        }
+
     }
 }

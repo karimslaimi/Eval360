@@ -29,7 +29,7 @@
                     </div> 
                     <div class="mb-3 col-md-6">
                         @Html.LabelFor(m => m.Direction, new { @class = "form-label" })
-                        @Html.DropDownListFor(m => m.Direction,(SelectList) ViewBag.DirectionsList, "Selectionner une Direction", new { @class = "form-control" })
+                        @Html.DropDownListFor(m => m.IdDirection,(SelectList) ViewBag.DirectionsList, "Selectionner une Direction", new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.Direction, "", new { @class = "text-danger" })
                     </div>
 
