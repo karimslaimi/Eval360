@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Dynamic;
 
 namespace Eval360.Controllers
 {
@@ -48,7 +49,7 @@ namespace Eval360.Controllers
             }).ToList();
             ViewBag.compagnieByDirection = JsonConvert.SerializeObject(res);
             ViewBag.compagnieCountByMonth = JsonConvert.SerializeObject(this.getCompagnieByMonthChart(directions));
-            ViewBag.DirectionList = JsonConvert.SerializeObject(directions);
+            ViewBag.DirectionList = JsonConvert.SerializeObject(directions.Select(x=>x.name).ToList());
             ViewBag.responseByAxeAndDirections = JsonConvert.SerializeObject(this.getAxeValueByDirection(directions));
             return View();
         }
@@ -67,23 +68,28 @@ namespace Eval360.Controllers
 
         private dynamic getAxeValueByDirection(List<Direction> directions)
         {
-            var data = new Dictionary<string, List<object>>();
+            List<dynamic> data = new List<dynamic>();
 
             var axeEval = this.db.AxeEval.OrderBy(x => x.name).ToArray();
-            
-            
-            foreach( var direction in directions)
-            {
-                var vals = new double[axeEval.Length];
 
-                foreach(var axe in axeEval)
+            foreach (var axe in axeEval)
+            {
+                var vals = new List<double>(directions.Count());
+                foreach (var direction in directions)
                 {
+                    
+
+
                     var average = this.db.CompagnieResponse.Where(x => x.CompagnieQuestion.question.idAxe == axe.id
-                    && x.CompagnieQuestion.compagnie.employee.Poste.IdDirection == direction.id).Average(x => x.note);
+                    && x.CompagnieQuestion.compagnie.employee.Poste.IdDirection == direction.id);
+                    
+                   vals.Add(average.Count()!=0?average.Average(x => x.note):0);
                 }
-                data.Add()
+                data.Add(new { name = axe.name, data = vals });
+
+
             }
-            return averageNotesByAxe;
+            return data;
 
         }
 
