@@ -42,6 +42,8 @@ namespace Eval360.Controllers
             }).OrderBy(a => a.AxeEvalName).Select(x => x.AverageResponse);
 
 
+            ViewBag.reponseByEvaluateur = JsonConvert.SerializeObject(getResponseByQualite());
+
             var res = this.db.Directions.Select(d => new
             {
                 name = d.name,
@@ -49,7 +51,7 @@ namespace Eval360.Controllers
             }).ToList();
             ViewBag.compagnieByDirection = JsonConvert.SerializeObject(res);
             ViewBag.compagnieCountByMonth = JsonConvert.SerializeObject(this.getCompagnieByMonthChart(directions));
-            ViewBag.DirectionList = JsonConvert.SerializeObject(directions.Select(x=>x.name).ToList());
+            ViewBag.DirectionList = JsonConvert.SerializeObject(directions.Select(x => x.name).ToList());
             ViewBag.responseByAxeAndDirections = JsonConvert.SerializeObject(this.getAxeValueByDirection(directions));
             return View();
         }
@@ -77,13 +79,13 @@ namespace Eval360.Controllers
                 var vals = new List<double>(directions.Count());
                 foreach (var direction in directions)
                 {
-                    
+
 
 
                     var average = this.db.CompagnieResponse.Where(x => x.CompagnieQuestion.question.idAxe == axe.id
                     && x.CompagnieQuestion.compagnie.employee.Poste.IdDirection == direction.id);
-                    
-                   vals.Add(average.Count()!=0?average.Average(x => x.note):0);
+
+                    vals.Add(average.Count() != 0 ? average.Average(x => x.note) : 0);
                 }
                 data.Add(new { name = axe.name, data = vals });
 
@@ -114,6 +116,22 @@ namespace Eval360.Controllers
 
 
             return data;
+        }
+
+
+        private dynamic getResponseByQualite()
+        {
+            Dictionary<string, double> data = new Dictionary<string, double>() { { "Autoévaluation", 0.0 }, { "Collaborateur", 0.0 }, { "Collègue", 0.0 }, { "Hiérarchie", 0.0 } };
+
+            foreach (string key in data.Keys)
+            {
+                if (this.db.Compagnie.Where(c => c.qualiteEvaluateur.Equals(key)).Count() != 0 
+                    && this.db.Compagnie.Where(c => c.qualiteEvaluateur.Equals(key)).SelectMany(s => s.compagnieQuestions).SelectMany(s => s.reponses).Count()!=0)
+                {
+                    data[key] = this.db.Compagnie.Where(c => c.qualiteEvaluateur.Equals(key)).SelectMany(s => s.compagnieQuestions).SelectMany(s => s.reponses).Average(r => r.note);
+                }
+            }
+            return data.Values;
         }
 
     }

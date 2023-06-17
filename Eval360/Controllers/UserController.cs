@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Eval360.Controllers
 {
@@ -252,7 +253,60 @@ namespace Eval360.Controllers
             return RedirectToAction("index");
         }
 
+        public async Task<IActionResult> stat(string id)
+        {
+            ViewBag.axeList = this.db.AxeEval.ToArray();
+            ViewBag.compagnieCount = this.db.Compagnie.Where(c=>c.userId == id).Count();
+            ViewBag.responseCount = this.db.CompagnieResponse.Where(c=>c.CompagnieQuestion.compagnie.userId == id).GroupBy(x => new { x.userId, x.CompagnieQuestion.compagnieId }).Count();
+            ViewBag.latestCompagnies = this.db.Compagnie.Where(c=>c.userId == id).Include(x => x.employee).OrderByDescending(x => x.dateDebut).Take(6);
+            ViewBag.responseByAxe = this.db.AxeEval.Select(ae => new
+            {
+                AxeEvalName = ae.name,
+                AverageResponse = ae.questions
+                                    .SelectMany(q => q.compagnieQuestions).Where(qc=>qc.compagnie.userId == id)
+                                    .SelectMany(cq => cq.reponses)
+                                    .Average(r => (double?)r.note)
+            }).OrderBy(a => a.AxeEvalName).Select(x => x.AverageResponse);
 
+            ViewBag.reponseByEvaluateur = JsonConvert.SerializeObject(getResponseByQualite(id));
+            ViewBag.compagnieCountByMonth = JsonConvert.SerializeObject(this.getCompagnieByMonthChart(id));
+
+            return View();
+
+        }
+
+        private dynamic getCompagnieByMonthChart(string id)
+        {
+           
+                var companiesPerMonth = new List<int>();
+                for (int month = 1; month <= 12; month++)
+                {
+                    var companiesCreated = this.db.Compagnie
+                        .Where(c => c.dateDebut.Month == month && c.userId == id);
+                    companiesPerMonth.Add(companiesCreated.Count());
+                }
+                 
+            
+
+
+            return companiesPerMonth;
+        }
+
+
+        private dynamic getResponseByQualite(string id)
+        {
+            Dictionary<string, double> data = new Dictionary<string, double>() { { "Autoévaluation", 0.0 }, { "Collaborateur", 0.0 }, { "Collègue", 0.0 }, { "Hiérarchie", 0.0 } };
+
+            foreach (string key in data.Keys)
+            {
+                if (this.db.Compagnie.Where(c => c.qualiteEvaluateur.Equals(key) && c.userId == id).Count() != 0
+                    && this.db.Compagnie.Where(c => c.qualiteEvaluateur.Equals(key)).SelectMany(s => s.compagnieQuestions).SelectMany(s => s.reponses).Count() != 0)
+                {
+                    data[key] = this.db.Compagnie.Where(c => c.qualiteEvaluateur.Equals(key) && c.userId == id).SelectMany(s => s.compagnieQuestions).SelectMany(s => s.reponses).Average(r => r.note);
+                }
+            }
+            return data.Values;
+        }
 
         private User updateUserFields(User userToUpdate, User currentUser)
         {

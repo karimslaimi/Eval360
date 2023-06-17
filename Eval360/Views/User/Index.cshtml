@@ -32,9 +32,9 @@
                     <!-- Table with stripped rows -->
                     <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
                         <div class="pull-right mb-3">
-                                <a class="btn btn-outline-primary" href="@Url.Action("create", "User")">Ajouter</a>
-                            </div>
-                            
+                            <a class="btn btn-outline-primary" href="@Url.Action("create", "User")">Ajouter</a>
+                        </div>
+
                         <div class="datatable-container">
                             <table id="datatable" class="display">
                                 <thead>
@@ -49,11 +49,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+
                                     @foreach (var user in Model)
                                     {
-                                        <tr >
-                                            <td>@user.cin</td>
+                                        <tr>
+                                            <td><a href="@Url.Action("stat", "User", new{id = user.Id})">@user.cin</a></td>
                                             <td>@user.preNom @user.Nom</td>
                                             <td>@user.Email</td>
                                             <td>@(user.dateEmbauche.HasValue? user.dateEmbauche.Value.ToString("dd/MM/yyyy") : "")</td>
@@ -68,7 +68,7 @@
                                         </tr>
                                     }
 
-                                     
+
                                 </tbody>
                             </table>
 
