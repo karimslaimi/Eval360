@@ -27,7 +27,7 @@
                     <!-- Table with stripped rows -->
                     <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
                         <div class="datatable-top">
-                           
+
                             <div class="datatable-search">
                                 <a class="btn btn-outline-primary" href="@Url.Action("create", "Poste")">Ajouter</a>
                             </div>
@@ -37,31 +37,36 @@
                                 <thead>
                                     <tr>
                                         <th>Id </th>
-                                        <th>Nom</th> 
+                                        <th>Nom</th>
                                         <th>Direction</th>
                                         <th>Employéé</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                 
+
                                     @foreach (var poste in Model)
                                     {
-                                        <tr >
+                                        <tr>
                                             <td>@poste.Id</td>
                                             <td>@poste.libelle</td>
                                             <td>
                                                 @(poste.Direction != null? Html.Raw($"<a>{poste.Direction.name}</a>"): Html.Raw("N/A"))
-                                            </td>   
+                                            </td>
                                             <td>
                                                 @(poste.users != null ? poste.users.Count() : 0)
                                             </td>
                                             <td>
                                                 <a class="btn btn-outline-success" href="@Url.Action("edit","Poste",new { id =poste.Id})">Modifier</a> |
-                                                <a class="btn btn-outline-danger" href="@Url.Action("delete","Poste",new { id =poste.Id})">supprimer</a>
+                                                @if (poste.users.Count() == 0)
+                                                {
+                                                    <a class="btn btn-outline-danger"href="@Url.Action("delete","Poste",new { id =poste.Id})">supprimer</a>
+                                                }else{
+                                                <a class="btn btn-outline-danger disabled" onclick="return false;">supprimer</a>
+                                                }
                                             </td>
                                         </tr>
-                                         
+
 
 
                                     }

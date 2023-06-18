@@ -73,9 +73,10 @@ namespace Eval360.Controllers
             foreach (string key in data.Keys)
             {
                 if (this.db.Compagnie.Where(c => c.qualiteEvaluateur.Equals(key) && c.userId == id).Count() != 0
-                    && this.db.Compagnie.Where(c => c.qualiteEvaluateur.Equals(key)).SelectMany(s => s.compagnieQuestions).SelectMany(s => s.reponses).Count() != 0)
+                    && this.db.Compagnie.Where(c => c.qualiteEvaluateur.Equals(key) && c.userId == id).SelectMany(s => s.compagnieQuestions).SelectMany(s => s.reponses).Count() != 0)
                 {
-                    data[key] = this.db.Compagnie.Where(c => c.qualiteEvaluateur.Equals(key) && c.userId == id).SelectMany(s => s.compagnieQuestions).SelectMany(s => s.reponses).Average(r => r.note);
+                    var res1 = this.db.Compagnie.Where(c => c.qualiteEvaluateur.Equals(key) && c.userId == id).SelectMany(s => s.compagnieQuestions).SelectMany(s => s.reponses);
+                    data[key] =res1.Average(r => r.note);
                 }
             }
             return data.Values;
